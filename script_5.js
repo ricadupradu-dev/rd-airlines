@@ -150,7 +150,20 @@ function renderAssignedFleetOnMapV30(){
 }
 
 function renderSimulation(){const text=formatSimTime();['virtualDate','simulationClock'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=text;});const d=document.getElementById('simDate'),t=document.getElementById('simTime');if(d)d.value=rdSimTime.toISOString().slice(0,10);if(t)t.value=rdSimTime.toTimeString().slice(0,5);const a=rdAutonomous?'ATIVADA':'desligada';['autonomousStatus','simulationAutoStatus'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent='Status: '+a;});const ab=document.getElementById('autonomousBtn');if(ab)ab.textContent=rdAutonomous?'Desativar operação autônoma':'Ativar operação autônoma';const sb=document.getElementById('simulationAutoBtn');if(sb)sb.textContent=rdAutonomous?'Desativar voos sem jogar':'Ativar voos sem jogar';const cb=document.getElementById('copilotBtn');if(cb){cb.textContent=rdCopilot?'Desativar copiloto automático':'Ativar copiloto automático';document.getElementById('copilotStatus').textContent='Status: '+(rdCopilot?'ATIVADO':'desligado');}renderVirtualPilots();renderAutonomousFlights();}
-function renderAutonomousFlights(){const el=document.getElementById('autonomousFlights');if(!el)return;const active=rdVirtualPilots.length&&rdAutonomous;const flights=rdFlightRoutes.slice(0,Math.min(6,Math.max(1,rdVirtualPilots.length))).map((r,i)=>{const p=rdVirtualPilots[i%rdVirtualPilots.length];return `<div class="flight-row"><span><b>${r[0]}</b> — ${r[1]} → ${r[2]} • ${p.name}</span><span>${active?'EM OPERAÇÃO':'AGUARDANDO'} • ${r[3]} → ${r[4]}</span></div>`}).join('');el.innerHTML=rdVirtualPilots.length?flights:'Contrate pelo menos um piloto virtual para liberar os voos autônomos.';}
+function renderAutonomousFlights(){
+ const el=document.getElementById('autonomousFlights');
+ if(!el)return;
+ const pilots=(Array.isArray(rdVirtualPilots)?rdVirtualPilots:[]).filter(Boolean);
+ const active=pilots.length&&rdAutonomous;
+ const routes=Array.isArray(rdFlightRoutes)?rdFlightRoutes:[];
+ const flights=routes.slice(0,Math.min(6,Math.max(1,pilots.length))).map((r,i)=>{
+   const p=pilots[i%pilots.length];
+   if(!p||!r)return '';
+   const name=p.name||p.callsign||'Piloto virtual';
+   return `<div class="flight-row"><span><b>${r[0]??''}</b> — ${r[1]??''} → ${r[2]??''} • ${name}</span><span>${active?'EM OPERAÇÃO':'AGUARDANDO'} • ${r[3]??''} → ${r[4]??''}</span></div>`;
+ }).join('');
+ el.innerHTML=pilots.length&&flights?flights:'Contrate pelo menos um piloto virtual para liberar os voos autônomos.';
+}
 function runAutonomousTick(){if(!rdAutonomous||!rdVirtualPilots.length)return;rdVirtualPilots.forEach(p=>{p.flights+=1;p.hours+=Math.floor(Math.random()*5)+1;p.status='Em operação';});saveSim();}
 document.addEventListener('DOMContentLoaded',()=>{renderSimulation();renderCrewAssignmentV30();initVirtualFleet100V30();setTimeout(()=>{resumeVirtualFlightsV30();renderAssignedFleetOnMapV30();},1200);});
 

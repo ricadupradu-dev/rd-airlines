@@ -1190,13 +1190,13 @@ function buildVirtualFleet100V30(){
  }
  // Nova política: todas as 20 aeronaves virtuais ficam no HANGAR até o usuário enviá-las ao gate.
  // Ao abrir esta versão, qualquer aeronave que esteja em GATE/ASSIGNED também retorna ao HANGAR.
- if(localStorage.getItem('rdAllAircraftHangarV30')!=='3'){
+ if(localStorage.getItem('rdAllAircraftHangarV30')!=='4'){
    rdVirtualFleet100V30=rdVirtualFleet100V30.map((x,i)=>{
      const airport=x.airport || (x.airline==='RDP'?'OPO':RD_VIRTUAL_FLEET_AIRPORTS_V30[i%RD_VIRTUAL_FLEET_AIRPORTS_V30.length]);
      return {...x,status:'PARKED',airport};
    });
    try{ localStorage.setItem('rdVirtualMotionStateV30','{}'); }catch(e){}
-   try{ localStorage.setItem('rdAllAircraftHangarV30','3'); }catch(e){}
+   try{ localStorage.setItem('rdAllAircraftHangarV30','4'); }catch(e){}
  }
  localStorage.setItem('rdVirtualFleet100V30',JSON.stringify(rdVirtualFleet100V30));
 }
@@ -1629,12 +1629,27 @@ function normalizeOpenSkyStateV30(s){
    spi:a[15]??null,position_source:a[16]??null,category:a[17]??null
  };
 }
+const realRouteCacheV30=new Map();
+async function fetchRealRouteV30(callsign){const key=String(callsign||'').trim().toUpperCase();if(!key)return null;const cached=realRouteCacheV30.get(key);if(cached&&Date.now()-cached.at<15*60*1000)return cached.data;try{const r=await fetch('/api/flight-route/'+encodeURIComponent(key),{cache:'no-store'});const d=await r.json();if(!r.ok)throw new Error(d.error||'HTTP '+r.status);const data=d.found?d:null;realRouteCacheV30.set(key,{at:Date.now(),data});return data;}catch(e){realRouteCacheV30.set(key,{at:Date.now(),data:null});return null;}}
+async function enrichRealRoutesV30(list){const targets=(list||[]).filter(x=>x&&x.callsign&&String(x.callsign).trim()).slice(0,24);let cursor=0;const worker=async()=>{while(cursor<targets.length){const x=targets[cursor++];const route=await fetchRealRouteV30(x.callsign);if(route){x.routeOrigin=route.origin?.iata||route.origin?.icao||null;x.routeOriginICAO=route.origin?.icao||null;x.routeDestination=route.destination?.iata||route.destination?.icao||null;x.routeDestinationICAO=route.destination?.icao||null;x.routeOriginName=route.origin?.name||null;x.routeDestinationName=route.destination?.name||null;x.routeAirline=route.airline?.name||null;}}};await Promise.all([worker(),worker()]);renderRDMapV21(true);}
+
 async function loadOpenSkyV30(force=false){
  const status=document.getElementById('openskyStatusV30');
  if(!force && Date.now()-openskyLastUpdateV30<28000)return;
  if(status)status.textContent='ADS-B: atualizando…';
  try{
-   const r=await fetch('/api/opensky/states',{cache:'no-store'});
+   let lat=-23.4356, lon=-46.4731, dist=250;
+   if(window.rdLiveMapV29 && typeof rdLiveMapV29.getCenter==='function'){
+     const c=rdLiveMapV29.getCenter();
+     lat=Number(c.lat)||lat; lon=Number(c.lng)||lon;
+     const b=rdLiveMapV29.getBounds();
+     const north=b.getNorth(), south=b.getSouth(), east=b.getEast(), west=b.getWest();
+     const dlat=Math.abs(north-south)/2, dlon=Math.abs(east-west)/2;
+     const approxNm=Math.max(dlat*60, dlon*60*Math.cos(lat*Math.PI/180));
+     dist=Math.max(40, Math.min(250, Math.round(approxNm*1.25)));
+   }
+   const qs=new URLSearchParams({lat:lat.toFixed(3),lon:lon.toFixed(3),dist:String(dist)});
+   const r=await fetch('/api/opensky/states?'+qs.toString(),{cache:'no-store'});
    const d=await r.json();
    if(!r.ok)throw new Error(d.error||'HTTP '+r.status);
    openskyStatesV30=Array.isArray(d.states)?d.states.map(normalizeOpenSkyStateV30).filter(x=>x.latitude!=null&&x.longitude!=null):[];
@@ -1645,8 +1660,10 @@ async function loadOpenSkyV30(force=false){
      if(sel){const old=sel.value;sel.innerHTML='<option value="ALL">País ADS-B: Todos</option>'+set.map(c=>`<option value="${String(c).replace(/"/g,'&quot;')}">${c}</option>`).join(''); if(set.includes(old))sel.value=old;}
    }
    if(status)status.textContent='🔵 adsb.fi: '+openskyStatesV30.length.toLocaleString('pt-BR')+' aeronaves';
- }catch(e){if(status)status.textContent='⚠️ adsb.fi: '+e.message;}
+ }catch(e){if(status)status.textContent='⚠️ adsb.fi: '+e.message; openskyStatesV30=[];}
  renderRDMapV21(true);
+ enrichRealRoutesV30(openskyStatesV30);
+ if(rdLiveMapV29){ setTimeout(()=>{ rdLiveMapV29.invalidateSize(); renderLiveRadarV29(RD_MAP_V21.filter(x=>!x.demo),openskyStatesV30); },120); }
 }
 function openskyTypeV30(s){const c=Number(s.category); if(c===8)return 'Helicóptero'; if(c===9)return 'Planador'; if(c===14)return 'UAV'; if(c>=2&&c<=7)return 'Aeronave'; return 'Outro';}
 const RD_AI_CREW_V30=[
@@ -1759,7 +1776,7 @@ function renderRDMapV21(fromOpenSky=false){
  const rows=useRD?rdRows:[]; const shownReal=useReal?realRows:[];
  const box=document.getElementById('mapFlightListV21'),count=document.getElementById('mapCountV21');if(!box)return;
  count.textContent=(rows.length+shownReal.length).toLocaleString('pt-BR');
- const realHtml=shownReal.slice(0,250).map(x=>`<div class="map-flight-row-v21" onclick="focusOpenSkyV30('${x.icao24||''}')"><div class="map-flight-top-v21"><div class="map-flight-brand-v22"><span style="color:#0b6b3a;font-size:18px">✈</span><b>${(x.callsign||x.icao24||'SEM CALLSIGN').trim()}</b></div><span class="map-status-v21">adsb.fi</span></div><div class="map-flight-meta-v21"><span>🆔 ${x.icao24||'—'}</span><span>🌎 ${x.origin_country||'—'}</span><span>⬆ ${x.baro_altitude!=null?Math.round(x.baro_altitude*3.28084).toLocaleString('pt-BR')+' ft':'—'}</span><span>💨 ${x.velocity!=null?Math.round(x.velocity*1.94384)+' kt':'—'}</span></div></div>`).join('');
+ const realHtml=shownReal.slice(0,250).map(x=>`<div class="map-flight-row-v21" onclick="focusOpenSkyV30('${x.icao24||''}')"><div class="map-flight-top-v21"><div class="map-flight-brand-v22"><span style="color:#0b6b3a;font-size:18px">✈</span><b>${(x.callsign||x.icao24||'SEM CALLSIGN').trim()}</b></div><span class="map-status-v21">adsb.fi</span></div><div class="map-flight-meta-v21"><span>🛫 ${(x.routeOrigin&&x.routeDestination)?`${x.routeOrigin} → ${x.routeDestination}`:'Rota não disponível'}</span><span>🆔 ${x.icao24||'—'}</span><span>🌎 ${x.origin_country||'—'}</span><span>⬆ ${x.baro_altitude!=null?Math.round(x.baro_altitude*3.28084).toLocaleString('pt-BR')+' ft':'—'}</span><span>💨 ${x.velocity!=null?Math.round(x.velocity*1.94384)+' kt':'—'}</span></div></div>`).join('');
  const rdHtml=effectiveRows.map(x=>{const ss=x.safety;return `<div class="map-flight-row-v21 ${x.blocked?'flight-blocked-v30':''}" onclick="focusMapAirportV21('${x.origin}')"><div class="map-flight-top-v21"><div class="map-flight-brand-v22"><img class="map-airline-logo-v22" src="${airlineLogoV22(x.airline)}" onerror="this.style.display='none'" alt=""><b>✈ ${x.flight} • ${x.origin} → ${x.dest}</b></div><span class="map-status-v21 ${x.blocked?'safety-block':'safety-ok'}">${x.blocked?'🚫 SEM AERONAVE COMPATÍVEL':'🟡 RD VIRTUAL'}</span></div><div class="map-flight-meta-v21"><span>🛩️ ${x.model}</span>${x.substituted?`<span>🔄 substituído de ${x.originalModel}</span>`:''}<span>🆔 ${x.reg}</span><span>🛫 ${ss.origin.toLocaleString('pt-BR')} m</span><span>🛬 ${ss.dest.toLocaleString('pt-BR')} m</span><span>📏 mín. ${ss.need.toLocaleString('pt-BR')} m</span></div></div>`;}).join('');
  box.innerHTML=(realHtml+rdHtml)||'<div style="padding:18px;color:#999">Nenhuma aeronave encontrada com os filtros selecionados.</div>';
  renderLiveRadarV29(rdSafeRows,shownReal);
@@ -1768,8 +1785,8 @@ let rdLiveAirportLayerV30=null, rdLiveRealLayerV30=null, rdLiveVirtualLayerV30=n
 function ensureLiveLayersV30(){
  const el=document.getElementById('rdLiveMapV29'); if(!el||typeof L==='undefined')return false;
  if(!rdLiveMapV29){
-   rdLiveMapV29=L.map(el,{worldCopyJump:true,zoomControl:true,minZoom:2,maxZoom:10,preferCanvas:true}).setView([8,-28],3);
-   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors | OpenSky Network',maxZoom:19}).addTo(rdLiveMapV29);
+   rdLiveMapV29=L.map(el,{worldCopyJump:true,zoomControl:true,minZoom:2,maxZoom:10,preferCanvas:true}).setView([-15.0,-48.0],4);
+   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors | ADS-B data: adsb.fi',maxZoom:19}).addTo(rdLiveMapV29);
    rdLiveAirportLayerV30=L.layerGroup().addTo(rdLiveMapV29);
    rdLiveRealLayerV30=L.layerGroup().addTo(rdLiveMapV29);
    rdLiveVirtualLayerV30=L.layerGroup().addTo(rdLiveMapV29);
@@ -1797,14 +1814,16 @@ function realRowsForViewportV30(realRows){
  return pool.slice(0,max);
 }
 function addOpenSkyMarkersV30(realRows){
- if(!rdLiveRealLayerV30)return;
+ if(!rdLiveMapV29||typeof L==='undefined')return;
+ if(!rdLiveRealLayerV30) rdLiveRealLayerV30=L.layerGroup().addTo(rdLiveMapV29);
  rdLiveRealLayerV30.clearLayers();
- const shown=realRowsForViewportV30(realRows);
+ const valid=Array.isArray(realRows)?realRows.filter(x=>Number.isFinite(Number(x.latitude))&&Number.isFinite(Number(x.longitude))):[];
+ const shown=realRowsForViewportV30(valid);
  shown.forEach(x=>{
-   const hd=x.true_track!=null?x.true_track:0;
-   const icon=L.divIcon({className:'',html:`<div class="rd-aircraft-marker-v29 opensky-real" style="transform:rotate(${hd}deg)"><span class="plane">✈</span></div>`,iconSize:[24,24],iconAnchor:[12,12]});
-   const m=L.marker([x.latitude,x.longitude],{icon,zIndexOffset:700});
-   setAircraftDetailPopupV30(m,detailHtmlForRealV30(x));
+   const hd=Number.isFinite(Number(x.true_track))?Number(x.true_track):0;
+   const icon=L.divIcon({className:'rd-real-aircraft-icon',html:`<span style="display:block;font-size:22px;line-height:22px;color:#24a0ff;text-shadow:0 0 6px #00131f;transform:rotate(${hd}deg)">✈</span>`,iconSize:[26,26],iconAnchor:[13,13]});
+   const m=L.marker([Number(x.latitude),Number(x.longitude)],{icon,zIndexOffset:2000,interactive:true});
+   if(typeof setAircraftDetailPopupV30==='function') setAircraftDetailPopupV30(m,detailHtmlForRealV30(x));
    m.addTo(rdLiveRealLayerV30);
  });
  const clock=document.getElementById('rdLiveMapClockV29');
@@ -2074,7 +2093,7 @@ function aircraftPhotoDetailV30(model){const m=String(model||'').toLowerCase();i
 function simulatedPassengerManifestDetailV30(key,capacity){const h=hashTextDetailV30(key),pax=Math.max(1,Math.min(capacity,Math.round(capacity*(0.68+(h%23)/100)))),names=[];for(let i=0;i<Math.min(pax,16);i++)names.push(RD_DETAIL_NAMES_V30[(h+i*7)%RD_DETAIL_NAMES_V30.length]);return{count:pax,names,shown:names.length};}
 function crewDetailV30(x){if(x?.route&&typeof getCrewDisplayV30==='function'&&!x.pilot)return getCrewDisplayV30(x.route);if(typeof crewNamesForFleetV30==='function')return crewNamesForFleetV30(x);return{pilot:'Não atribuído',copilot:'Não atribuído',purser:'Não atribuído',cabin:[]};}
 function detailHtmlForVirtualV30(x,state){const f=routeObjForFleetV30(x),crew=crewDetailV30(x),cap=RD_AIRCRAFT_CAPACITY_DETAIL_V30[x.model]||150,pax=simulatedPassengerManifestDetailV30(`${x.id}-${x.route||'nogate'}`,cap),phase=state?.phase?phaseLabelV30(state.phase):fleetStatusLabelV30(x.status),prog=state?Math.round(state.progress*100):0,origin=f?.origin||x.airport||'—',dest=f?.dest||'—',oName=RD_MAP_AIRPORTS_V21[origin]?.[0]||origin,dName=RD_MAP_AIRPORTS_V21[dest]?.[0]||dest;return `<div class="rd-aircraft-detail-v30"><div class="hero"><img src="${aircraftPhotoDetailV30(x.model)}" onerror="this.style.display='none'"><div class="shade"></div><div class="titlebar"><div class="callsign">${x.reg}<span class="brand">RD ${x.airline==='RDP'?'AIRLINES-PORTUGAL':'AIRLINES'}</span></div><div class="sub">${x.model} • ${phase}${state?` • ${prog}%`:''}</div></div></div><div class="body"><div class="route"><div><div class="code">${origin}</div><div class="name">${oName}</div></div><div class="arrow">✈</div><div><div class="code">${dest}</div><div class="name">${dName}</div></div></div><span class="pill virt-pill">VOO VIRTUAL RD AIRLINES</span><div class="section"><div class="grid"><div class="kv"><div class="k">Matrícula</div><div class="v">${x.reg}</div></div><div class="kv"><div class="k">Aeronave</div><div class="v">${x.model}</div></div><div class="kv"><div class="k">Status</div><div class="v">${phase}</div></div><div class="kv"><div class="k">Capacidade</div><div class="v">${cap} passageiros</div></div><div class="kv"><div class="k">Ocupação</div><div class="v">${pax.count} passageiros</div></div><div class="kv"><div class="k">Aeroporto</div><div class="v">${x.airport||origin}</div></div></div></div><div class="crew"><h4>👨‍✈️ Tripulação da rota</h4><div>👨‍✈️ Piloto: <b>${crew.pilot}</b></div><div>👨‍✈️ Copiloto: <b>${crew.copilot}</b></div><div>🧑‍✈️ Chefe de cabine: <b>${crew.purser}</b></div><div>🧑‍✈️ Comissários: <b>${crew.cabin?.length?crew.cabin.join(', '):'Não atribuídos'}</b></div></div><div class="passengers"><h4>👥 Passageiros — manifesto virtual</h4><div><b>${pax.count}</b> passageiros embarcados (simulado)</div><div class="pax-list">${pax.names.map((n,i)=>`${i+1}. ${n}`).join('<br>')}${pax.count>pax.shown?`<br>… e mais ${pax.count-pax.shown}`:''}</div></div><div class="note">Os passageiros e nomes acima são personagens fictícios da simulação RD AIRLINES e não representam passageiros reais.</div></div></div>`;}
-function detailHtmlForRealV30(x){const c=aiCrewForRealV30(x);return `<div class="rd-aircraft-detail-v30"><div class="hero"><img src="${aircraftPhotoDetailV30('')}" onerror="this.style.display='none'"><div class="shade"></div><div class="titlebar"><div class="callsign">${(x.callsign||x.icao24||'SEM CALLSIGN').trim()}<span class="brand">REAL / OPENSKY</span></div><div class="sub">${openskyTypeV30(x)} • ${x.origin_country||'País não informado'}</div></div></div><div class="body"><span class="pill real-pill">AERONAVE REAL • OpenSky Network</span><div class="section"><div class="grid"><div class="kv"><div class="k">ICAO24</div><div class="v">${x.icao24||'—'}</div></div><div class="kv"><div class="k">Altitude</div><div class="v">${x.baro_altitude!=null?Math.round(x.baro_altitude*3.28084).toLocaleString('pt-BR')+' ft':'—'}</div></div><div class="kv"><div class="k">Velocidade</div><div class="v">${x.velocity!=null?Math.round(x.velocity*1.94384)+' kt':'—'}</div></div><div class="kv"><div class="k">Proa</div><div class="v">${x.true_track!=null?Math.round(x.true_track)+'°':'—'}</div></div><div class="kv"><div class="k">País</div><div class="v">${x.origin_country||'—'}</div></div><div class="kv"><div class="k">Em solo</div><div class="v">${x.on_ground?'Sim':'Não'}</div></div></div></div><div class="crew"><h4>🤖 Tripulação IA — simulada</h4><div>👨‍✈️ Piloto: <b>${c.pilot}</b></div><div>👨‍✈️ 1º Oficial: <b>${c.copilot}</b></div><div>🧑‍✈️ Chefe de cabine: <b>${c.cabinLead}</b></div><div>🧑‍✈️ Comissário(a): <b>${c.cabinCrew}</b></div></div><div class="passengers"><h4>👥 Passageiros</h4><div>Quantidade e nomes de passageiros <b>não são fornecidos pelo OpenSky</b>.</div></div><div class="note">Não inventamos passageiros reais. Para os voos virtuais RD AIRLINES, o manifesto é simulado.</div><div class="note">Dados de posição e estado: OpenSky Network. A tripulação exibida aqui é uma camada fictícia de imersão da RD AIRLINES.</div></div></div>`;}
+function detailHtmlForRealV30(x){const c=aiCrewForRealV30(x),o=x.routeOrigin||x.routeOriginICAO||'—',d=x.routeDestination||x.routeDestinationICAO||'—',on=x.routeOriginName||o,dn=x.routeDestinationName||d;return `<div class="rd-aircraft-detail-v30"><div class="hero"><img src="${aircraftPhotoDetailV30('')}" onerror="this.style.display='none'"><div class="shade"></div><div class="titlebar"><div class="callsign">${(x.callsign||x.icao24||'SEM CALLSIGN').trim()}<span class="brand">REAL / ADS-B</span></div><div class="sub">${openskyTypeV30(x)} • ${x.origin_country||'País não informado'}</div></div></div><div class="body"><span class="pill real-pill">AERONAVE REAL • ADS-B / adsb.fi</span><div class="route"><div><div class="code">${o}</div><div class="name">${on}</div></div><div class="arrow">✈</div><div><div class="code">${d}</div><div class="name">${dn}</div></div></div><div class="section"><div class="grid"><div class="kv"><div class="k">ICAO24</div><div class="v">${x.icao24||'—'}</div></div><div class="kv"><div class="k">Altitude</div><div class="v">${x.baro_altitude!=null?Math.round(x.baro_altitude*3.28084).toLocaleString('pt-BR')+' ft':'—'}</div></div><div class="kv"><div class="k">Velocidade</div><div class="v">${x.velocity!=null?Math.round(x.velocity*1.94384)+' kt':'—'}</div></div><div class="kv"><div class="k">Proa</div><div class="v">${x.true_track!=null?Math.round(x.true_track)+'°':'—'}</div></div><div class="kv"><div class="k">País</div><div class="v">${x.origin_country||'—'}</div></div><div class="kv"><div class="k">Em solo</div><div class="v">${x.on_ground?'Sim':'Não'}</div></div></div></div><div class="crew"><h4>🤖 Tripulação IA — simulada</h4><div>👨‍✈️ Piloto: <b>${c.pilot}</b></div><div>👨‍✈️ 1º Oficial: <b>${c.copilot}</b></div><div>🧑‍✈️ Chefe de cabine: <b>${c.cabinLead}</b></div><div>🧑‍✈️ Comissário(a): <b>${c.cabinCrew}</b></div></div><div class="passengers"><h4>👥 Passageiros</h4><div>Quantidade e nomes de passageiros <b>não são fornecidos pelo ADS-B</b>.</div></div><div class="note">Origem/destino: enriquecimento por callsign via ADSBDB. Posição e estado: adsb.fi. A rota pode estar indisponível ou desatualizada para alguns voos.</div></div></div>`;}
 function setAircraftDetailPopupV30(marker,html){const maxH=Math.max(320,Math.floor(window.innerHeight*0.58));const opts={maxWidth:340,minWidth:0,maxHeight:maxH,closeButton:true,className:'rd-detail-popup-compact',autoPan:true,autoPanPadding:[18,18]};try{marker.bindPopup(html,opts);}catch(e){marker.bindPopup(html,{maxWidth:340,maxHeight:maxH,closeButton:true});}}
 </script>
 <script>
@@ -2110,13 +2129,13 @@ function renderHangarV30(){
   const q=(document.getElementById('hangarSearchV30')?.value||'').toLowerCase();
   const air=document.getElementById('hangarAirlineV30')?.value||'ALL';
   const airport=document.getElementById('hangarAirportV30')?.value||'ALL';
-  const rows=(rdVirtualFleet100V30||[]).filter(x=>x.status==='PARKED')
+  const rows=(rdVirtualFleet100V30||[]).filter(x=>x&&x.status==='PARKED')
     .filter(x=>air==='ALL'||x.airline===air)
     .filter(x=>airport==='ALL'||!airport||x.airport===airport)
     .filter(x=>[x.reg,x.model,x.airport,x.airline].join(' ').toLowerCase().includes(q));
-  const total=(rdVirtualFleet100V30||[]).filter(x=>x.status==='PARKED').length;
-  const gate=(rdVirtualFleet100V30||[]).filter(x=>x.status==='GATE').length;
-  const airborne=(rdVirtualFleet100V30||[]).filter(x=>x.status==='ASSIGNED').length;
+  const total=(rdVirtualFleet100V30||[]).filter(x=>x&&x.status==='PARKED').length;
+  const gate=(rdVirtualFleet100V30||[]).filter(x=>x&&x.status==='GATE').length;
+  const airborne=(rdVirtualFleet100V30||[]).filter(x=>x&&x.status==='ASSIGNED').length;
   const t=document.getElementById('hangarTotalV30'),g=document.getElementById('hangarGateV30'),b=document.getElementById('hangarAirborneV30');
   if(t)t.textContent=total;if(g)g.textContent=gate;if(b)b.textContent=airborne;
   list.innerHTML=rows.map(x=>`<div style="display:grid;grid-template-columns:1.2fr 1.2fr .8fr .8fr auto;gap:10px;align-items:center;border-top:1px solid #262626;padding:10px 0">\
