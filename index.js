@@ -8,31 +8,101 @@ const root=__dirname;
 const app=express();
 const PORT=Number(process.env.PORT||3000);
 const TOKEN_URL='https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token';
-const API_URL='https://opensky-network.org/api/states/all';
-let token=null, tokenExpiresAt=0, cache={at:0,data:null};
-async function getToken(){
- if(token && Date.now()<tokenExpiresAt)return token;
- if(!process.env.OPENSKY_CLIENT_ID||!process.env.OPENSKY_CLIENT_SECRET)throw new Error('Credenciais OpenSky não configuradas no servidor');
- const body=new URLSearchParams({grant_type:'client_credentials',client_id:process.env.OPENSKY_CLIENT_ID,client_secret:process.env.OPENSKY_CLIENT_SECRET});
- const r=await fetch(TOKEN_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body});
- const d=await r.json().catch(()=>({})); if(!r.ok)throw new Error(d.error_description||'Falha ao autenticar no OpenSky');
- token=d.access_token; tokenExpiresAt=Date.now()+Math.max(60,(Number(d.expires_in)||1800)-60)*1000; return token;
-}
-app.get('/api/health',(req,res)=>res.json({ok:true,service:'rd-airlines',openskyConfigured:Boolean(process.env.OPENSKY_CLIENT_ID&&process.env.OPENSKY_CLIENT_SECRET)}));
-app.get('/api/opensky/states',async(req,res)=>{
- try{
-   if(cache.data && Date.now()-cache.at<28000)return res.json(cache.data);
-   const bearer=await getToken();
-  const r = await fetch(API_URL, {
-  headers: {
-    Authorization: `Bearer ${bearer}`,
-    Accept: 'application/json'
+const ADSBFI_BASE = 'https://opendata.adsb.fi/api/v3';
+let cache = { at: 0, data: null };
+
+app.get('/api/opensky/states', async (req, res) => {
+  try {
+    const lat = Number(req.query.lat ?? -23.4356);
+    const lon = Number(req.query.lon ?? -46.4731);
+    const dist = Math.min(
+      Math.max(Number(req.query.dist ?? 250), 1),
+      250
+    );
+
+    if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
+      return res.status(400).json({
+        ok: false,
+        error: 'Latitude ou longitude inválida'
+      });
+    }
+
+    if (cache.data && Date.now() - cache.at < 1000) {
+      return res.json(cache.data);
+    }
+
+    const url = `${ADSBFI_BASE}/lat/${lat}/lon/${lon}/dist/${dist}`;
+
+    const response = await fetch(url, {
+      headers: {
+        Accept: 'application/json',
+        'User-Agent': 'RD-AIRLINES/30.1'
+      }
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(
+        `adsb.fi HTTP ${response.status}: ${text.slice(0, 200)}`
+      );
+    }
+
+    const data = await response.json();
+
+    const aircraft = Array.isArray(data.ac)
+      ? data.ac
+      : [];
+
+    const states = aircraft
+      .filter(a =>
+        Number.isFinite(Number(a.lat)) &&
+        Number.isFinite(Number(a.lon))
+      )
+      .map(a => [
+        String(a.hex || ''),
+        String(a.flight || '').trim(),
+        null,
+        null,
+        null,
+        Number(a.lon),
+        Number(a.lat),
+        Number.isFinite(Number(a.alt_baro))
+          ? Number(a.alt_baro) * 0.3048
+          : null,
+        false,
+        Number.isFinite(Number(a.gs))
+          ? Number(a.gs) * 0.514444
+          : null,
+        Number.isFinite(Number(a.track))
+          ? Number(a.track)
+          : null,
+        Number.isFinite(Number(a.baro_rate))
+          ? Number(a.baro_rate) * 0.00508
+          : null
+      ]);
+
+    const result = {
+      ok: true,
+      source: 'adsb.fi',
+      time: Math.floor(Date.now() / 1000),
+      states
+    };
+
+    cache = {
+      at: Date.now(),
+      data: result
+    };
+
+    res.json(result);
+  } catch (e) {
+    console.error('adsb.fi error:', e);
+
+    res.status(502).json({
+      ok: false,
+      source: 'adsb.fi',
+      error: e.message
+    });
   }
-});
-   if(r.status===401){token=null;tokenExpiresAt=0;const b=await getToken();const retry=await fetch(API_URL,{headers:{Authorization:`Bearer ${b}`}});if(!retry.ok)throw new Error(`OpenSky HTTP ${retry.status}`);const d=await retry.json();cache={at:Date.now(),data:d};return res.json(d);}
-   if(!r.ok){const txt=await r.text();throw new Error(`OpenSky HTTP ${r.status}${txt?': '+txt.slice(0,160):''}`);}
-   const d=await r.json();cache={at:Date.now(),data:d};res.json(d);
- }catch(e){res.status(502).json({ok:false,error:e.message});}
 });
 
 const weatherCache=new Map();
