@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>RD AIRLINES V30 — OpenSky</title>
+<title>RD AIRLINES V30 — ADS-B</title>
 <style>
 :root{--gold:#d4af37;--gold2:#f0d36b;--black:#080808;--panel:#121212;--line:#292929;--text:#f5f2e8;--muted:#aaa}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 20% 0,#241e0b 0,#080808 34%);color:var(--text);font-family:Inter,Arial,sans-serif}
@@ -415,11 +415,11 @@ header .logo img{width:180px!important;height:48px!important;object-fit:contain!
 
 <main id="map" style="display:none">
 <section class="section map-section-v21">
-<h2>🗺️ Mapa RD AIRLINES + OpenSky</h2>
-<p class="muted">Radar operacional híbrido: aeronaves reais do OpenSky + voos virtuais da RD AIRLINES. As credenciais do OpenSky ficam somente no servidor.</p>
+<h2>🗺️ Mapa RD AIRLINES + ADS-B</h2>
+<p class="muted">Radar operacional híbrido: tráfego real via adsb.fi + voos virtuais da RD AIRLINES.</p>
 <div class="map-filter-bar-v21">
-<select id="mapSourceFilterV30" onchange="renderRDMapV21()"><option value="ALL">Fonte: Todas</option><option value="OPENSKY">🔵 OpenSky — reais</option><option value="RD">🟡 RD AIRLINES — virtuais</option></select>
-<select id="mapCountryFilterV30" onchange="renderRDMapV21()"><option value="ALL">País OpenSky: Todos</option></select>
+<select id="mapSourceFilterV30" onchange="renderRDMapV21()"><option value="ALL">Fonte: Todas</option><option value="OPENSKY">🔵 ADS-B / adsb.fi — reais</option><option value="RD">🟡 RD AIRLINES — virtuais</option></select>
+<select id="mapCountryFilterV30" onchange="renderRDMapV21()"><option value="ALL">País ADS-B: Todos</option></select>
 <select id="mapAirlineFilterV21" onchange="renderRDMapV21()"><option value="ALL">Companhia: Todas</option><option value="RD">RD AIRLINES</option><option value="RDP">RD AIRLINES-PORTUGAL</option><option value="G3">GOL</option><option value="AD">Azul</option><option value="LA">LATAM</option><option value="AA">American Airlines</option><option value="UA">United</option><option value="DL">Delta</option><option value="EK">Emirates</option><option value="QR">Qatar Airways</option><option value="TP">TAP Air Portugal</option><option value="BA">British Airways</option><option value="LH">Lufthansa</option></select>
 <select id="mapTypeFilterV21" onchange="renderRDMapV21()"><option value="ALL">Tipo: Todos</option><option value="Comercial">Comerciais</option><option value="Executiva">Executivas</option><option value="Militar">Militares</option></select>
 <select id="mapStatusFilterV21" onchange="renderRDMapV21()"><option value="ALL">Situação: Todas</option><option value="Em voo">Em voo</option><option value="No solo">No solo</option><option value="No gate">No gate</option></select>
@@ -442,7 +442,7 @@ header .logo img{width:180px!important;height:48px!important;object-fit:contain!
 <div id="mapFlightListV21"></div>
 </div>
 </div>
-<div class="map-legend-v21"><span><i class="dot-v21 airport-dot"></i>Aeroporto</span><span style="color:#0b6b3a">● OpenSky real</span><span style="color:#d7b64a">● RD virtual</span><span>〰️ Rota RD</span><span id="openskyStatusV30">OpenSky: aguardando</span></div>
+<div class="map-legend-v21"><span><i class="dot-v21 airport-dot"></i>Aeroporto</span><span style="color:#0b6b3a">● ADS-B real / adsb.fi</span><span style="color:#d7b64a">● RD virtual</span><span>〰️ Rota RD</span><span id="openskyStatusV30">ADS-B: aguardando</span></div>
 <div class="card" style="margin-top:16px">
   <h3>👨‍✈️ Tripulação & Operação automática</h3>
   <p>Escolha piloto, copiloto e comissários para cada rota virtual. Em voos OpenSky, os nomes exibidos são <b>tripulação IA simulada</b>, sem relação com a tripulação real da aeronave.</p>
@@ -814,8 +814,268 @@ function connectFlight(){const o=document.getElementById('connOrigin').value,p=d
 </script>
 
 <script>
-const rdRoutesBR="[('GRU', 'OPO', 'Guarulhos', 'Porto'), ('REC', 'GVAC', 'Recife', 'Sal, Cabo Verde'), ('SDRS', 'SBCT', 'Resende', 'Curitiba'), ('GRU', 'KLAX', 'Guarulhos', 'Los Angeles'), ('GIG', 'KSFO', 'Galeão', 'San Francisco'), ('GRU', 'SPJC', 'Guarulhos', 'Lima'), ('GRU', 'OEJN', 'Guarulhos', 'Jeddah'), ('GRU', 'UUEE', 'Guarulhos', 'Moscow'), ('REC', 'GOBD', 'Recife', 'Senegal'), ('REC', 'DTTA', 'Recife', 'Tunis'), ('GRU', 'SOCA', 'Guarulhos', 'Cayenne'), ('GRU', 'SBEG', 'Guarulhos', 'Manaus'), ('SDRS', 'SBBR', 'Resende', 'Brasília'), ('SDRS', 'SBSJ', 'Resende', 'São José dos Campos'), ('SDRS', 'SBKP', 'Resende', 'Campinas'), ('GIG', 'GRU', 'Galeão', 'Guarulhos'), ('SDRS', 'GIG', 'Resende', 'Galeão'), ('GRU', 'REC', 'Guarulhos', 'Recife'), ('GRU', 'CYVR', 'Guarulhos', 'Vancouver'), ('GRU', 'USH', 'Guarulhos', 'Ushuaia'), ('GRU', 'KJFK', 'Guarulhos', 'New York JFK'), ('OPO', 'KSFO', 'Porto', 'San Francisco'), ('GRU', 'LSZH', 'Guarulhos', 'Zurich'), ('GRU', 'LSZH', 'Guarulhos', 'Zurich'), ('GRU', 'LSZH', 'Guarulhos', 'Zurich')]";
-const rdRoutesPT="[('OPO', 'HECA', 'Porto', 'Cairo'), ('OPO', 'LIS', 'Porto', 'Lisboa'), ('OPO', 'FAO', 'Porto', 'Faro'), ('OPO', 'VGO', 'Porto', 'Vigo'), ('OPO', 'CBW', 'Porto', 'Castelo Branco'), ('OPO', 'HAAB', 'Porto', 'Adis Abeba'), ('OPO', 'LTFM', 'Porto', 'Istambul'), ('OPO', 'CYVR', 'Porto', 'Vancouver'), ('OPO', 'KSFO', 'Porto', 'San Francisco'), ('OPO', 'RJAA', 'Porto', 'Tokyo Narita'), ('OPO', 'EDDB', 'Porto', 'Berlin'), ('OPO', 'REC', 'Porto', 'Recife'), ('OPO', 'SBBR', 'Porto', 'Brasília'), ('OPO', 'FNBJ', 'Porto', 'Luanda'), ('OPO', 'FQMA', 'Porto', 'Maputo'), ('OPO', 'GVAC', 'Porto', 'Espargos / Sal'), ('OPO', 'SCEL', 'Porto', 'Santiago'), ('OPO', 'LEMD', 'Porto', 'Madrid')]";
+const rdRoutesBR = [
+  [
+    'GRU',
+    'OPO',
+    'Guarulhos',
+    'Porto'
+  ],
+  [
+    'REC',
+    'GVAC',
+    'Recife',
+    'Sal, Cabo Verde'
+  ],
+  [
+    'SDRS',
+    'SBCT',
+    'Resende',
+    'Curitiba'
+  ],
+  [
+    'GRU',
+    'KLAX',
+    'Guarulhos',
+    'Los Angeles'
+  ],
+  [
+    'GIG',
+    'KSFO',
+    'Galeão',
+    'San Francisco'
+  ],
+  [
+    'GRU',
+    'SPJC',
+    'Guarulhos',
+    'Lima'
+  ],
+  [
+    'GRU',
+    'OEJN',
+    'Guarulhos',
+    'Jeddah'
+  ],
+  [
+    'GRU',
+    'UUEE',
+    'Guarulhos',
+    'Moscow'
+  ],
+  [
+    'REC',
+    'GOBD',
+    'Recife',
+    'Senegal'
+  ],
+  [
+    'REC',
+    'DTTA',
+    'Recife',
+    'Tunis'
+  ],
+  [
+    'GRU',
+    'SOCA',
+    'Guarulhos',
+    'Cayenne'
+  ],
+  [
+    'GRU',
+    'SBEG',
+    'Guarulhos',
+    'Manaus'
+  ],
+  [
+    'SDRS',
+    'SBBR',
+    'Resende',
+    'Brasília'
+  ],
+  [
+    'SDRS',
+    'SBSJ',
+    'Resende',
+    'São José dos Campos'
+  ],
+  [
+    'SDRS',
+    'SBKP',
+    'Resende',
+    'Campinas'
+  ],
+  [
+    'GIG',
+    'GRU',
+    'Galeão',
+    'Guarulhos'
+  ],
+  [
+    'SDRS',
+    'GIG',
+    'Resende',
+    'Galeão'
+  ],
+  [
+    'GRU',
+    'REC',
+    'Guarulhos',
+    'Recife'
+  ],
+  [
+    'GRU',
+    'CYVR',
+    'Guarulhos',
+    'Vancouver'
+  ],
+  [
+    'GRU',
+    'USH',
+    'Guarulhos',
+    'Ushuaia'
+  ],
+  [
+    'GRU',
+    'KJFK',
+    'Guarulhos',
+    'New York JFK'
+  ],
+  [
+    'OPO',
+    'KSFO',
+    'Porto',
+    'San Francisco'
+  ],
+  [
+    'GRU',
+    'LSZH',
+    'Guarulhos',
+    'Zurich'
+  ],
+  [
+    'GRU',
+    'LSZH',
+    'Guarulhos',
+    'Zurich'
+  ],
+  [
+    'GRU',
+    'LSZH',
+    'Guarulhos',
+    'Zurich'
+  ]
+];
+const rdRoutesPT = [
+  [
+    'OPO',
+    'HECA',
+    'Porto',
+    'Cairo'
+  ],
+  [
+    'OPO',
+    'LIS',
+    'Porto',
+    'Lisboa'
+  ],
+  [
+    'OPO',
+    'FAO',
+    'Porto',
+    'Faro'
+  ],
+  [
+    'OPO',
+    'VGO',
+    'Porto',
+    'Vigo'
+  ],
+  [
+    'OPO',
+    'CBW',
+    'Porto',
+    'Castelo Branco'
+  ],
+  [
+    'OPO',
+    'HAAB',
+    'Porto',
+    'Adis Abeba'
+  ],
+  [
+    'OPO',
+    'LTFM',
+    'Porto',
+    'Istambul'
+  ],
+  [
+    'OPO',
+    'CYVR',
+    'Porto',
+    'Vancouver'
+  ],
+  [
+    'OPO',
+    'KSFO',
+    'Porto',
+    'San Francisco'
+  ],
+  [
+    'OPO',
+    'RJAA',
+    'Porto',
+    'Tokyo Narita'
+  ],
+  [
+    'OPO',
+    'EDDB',
+    'Porto',
+    'Berlin'
+  ],
+  [
+    'OPO',
+    'REC',
+    'Porto',
+    'Recife'
+  ],
+  [
+    'OPO',
+    'SBBR',
+    'Porto',
+    'Brasília'
+  ],
+  [
+    'OPO',
+    'FNBJ',
+    'Porto',
+    'Luanda'
+  ],
+  [
+    'OPO',
+    'FQMA',
+    'Porto',
+    'Maputo'
+  ],
+  [
+    'OPO',
+    'GVAC',
+    'Porto',
+    'Espargos / Sal'
+  ],
+  [
+    'OPO',
+    'SCEL',
+    'Porto',
+    'Santiago'
+  ],
+  [
+    'OPO',
+    'LEMD',
+    'Porto',
+    'Madrid'
+  ]
+];
 function renderRDRouteTable(){
  const row=r=>`<tr><td class="route-code">${r[0]}</td><td>${r[2]}</td><td class="route-code">${r[1]}</td><td>${r[3]}</td><td><span class="route-badge">RD AIRLINES</span></td></tr>`;
  const br=document.getElementById('rdRoutesBR'),pt=document.getElementById('rdRoutesPT');
@@ -908,13 +1168,7 @@ const RD_VIRTUAL_FLEET_MODELS_V30=[
  ['A330-200','RDP',1],['A320neo','RDP',4]
 ];
 const RD_VIRTUAL_FLEET_AIRPORTS_V30=['SDRS','GRU','GIG','SDU','REC','OPO'];
-let rdVirtualFleet100V30 = JSON.parse(
-  localStorage.getItem('rdVirtualFleet100V30') || 'null'
-);
-
-if (!Array.isArray(rdVirtualFleet100V30)) {
-  rdVirtualFleet100V30 = [];
-}
+let rdVirtualFleet100V30=JSON.parse(localStorage.getItem('rdVirtualFleet100V30')||'null');
 function createVirtualAircraftRecordV30(n, model, airline){
  const isRdp=airline==='RDP';
  const reg=isRdp?`CS-RDP${String(n).padStart(3,'0')}`:`PR-RD${String(n).padStart(3,'0')}`;
@@ -1064,7 +1318,20 @@ function renderAssignedFleetOnMapV30(){
 }
 
 function renderSimulation(){const text=formatSimTime();['virtualDate','simulationClock'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=text;});const d=document.getElementById('simDate'),t=document.getElementById('simTime');if(d)d.value=rdSimTime.toISOString().slice(0,10);if(t)t.value=rdSimTime.toTimeString().slice(0,5);const a=rdAutonomous?'ATIVADA':'desligada';['autonomousStatus','simulationAutoStatus'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent='Status: '+a;});const ab=document.getElementById('autonomousBtn');if(ab)ab.textContent=rdAutonomous?'Desativar operação autônoma':'Ativar operação autônoma';const sb=document.getElementById('simulationAutoBtn');if(sb)sb.textContent=rdAutonomous?'Desativar voos sem jogar':'Ativar voos sem jogar';const cb=document.getElementById('copilotBtn');if(cb){cb.textContent=rdCopilot?'Desativar copiloto automático':'Ativar copiloto automático';document.getElementById('copilotStatus').textContent='Status: '+(rdCopilot?'ATIVADO':'desligado');}renderVirtualPilots();renderAutonomousFlights();}
-function renderAutonomousFlights(){const el=document.getElementById('autonomousFlights');if(!el)return;const active=rdVirtualPilots.length&&rdAutonomous;const flights=rdFlightRoutes.slice(0,Math.min(6,Math.max(1,rdVirtualPilots.length))).map((r,i)=>{const p=rdVirtualPilots[i%rdVirtualPilots.length];return `<div class="flight-row"><span><b>${r[0]}</b> — ${r[1]} → ${r[2]} • ${p.name}</span><span>${active?'EM OPERAÇÃO':'AGUARDANDO'} • ${r[3]} → ${r[4]}</span></div>`}).join('');el.innerHTML=rdVirtualPilots.length?flights:'Contrate pelo menos um piloto virtual para liberar os voos autônomos.';}
+function renderAutonomousFlights(){
+ const el=document.getElementById('autonomousFlights');
+ if(!el)return;
+ const pilots=(Array.isArray(rdVirtualPilots)?rdVirtualPilots:[]).filter(Boolean);
+ const active=pilots.length&&rdAutonomous;
+ const routes=Array.isArray(rdFlightRoutes)?rdFlightRoutes:[];
+ const flights=routes.slice(0,Math.min(6,Math.max(1,pilots.length))).map((r,i)=>{
+   const p=pilots[i%pilots.length];
+   if(!p||!r)return '';
+   const name=p.name||p.callsign||'Piloto virtual';
+   return `<div class="flight-row"><span><b>${r[0]??''}</b> — ${r[1]??''} → ${r[2]??''} • ${name}</span><span>${active?'EM OPERAÇÃO':'AGUARDANDO'} • ${r[3]??''} → ${r[4]??''}</span></div>`;
+ }).join('');
+ el.innerHTML=pilots.length&&flights?flights:'Contrate pelo menos um piloto virtual para liberar os voos autônomos.';
+}
 function runAutonomousTick(){if(!rdAutonomous||!rdVirtualPilots.length)return;rdVirtualPilots.forEach(p=>{p.flights+=1;p.hours+=Math.floor(Math.random()*5)+1;p.status='Em operação';});saveSim();}
 document.addEventListener('DOMContentLoaded',()=>{renderSimulation();renderCrewAssignmentV30();initVirtualFleet100V30();setTimeout(()=>{resumeVirtualFlightsV30();renderAssignedFleetOnMapV30();},1200);});
 
@@ -1365,7 +1632,7 @@ function normalizeOpenSkyStateV30(s){
 async function loadOpenSkyV30(force=false){
  const status=document.getElementById('openskyStatusV30');
  if(!force && Date.now()-openskyLastUpdateV30<28000)return;
- if(status)status.textContent='OpenSky: atualizando…';
+ if(status)status.textContent='ADS-B: atualizando…';
  try{
    const r=await fetch('/api/opensky/states',{cache:'no-store'});
    const d=await r.json();
@@ -1375,10 +1642,10 @@ async function loadOpenSkyV30(force=false){
    const set=[...new Set(openskyStatesV30.map(x=>x.origin_country).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
    if(set.join('|')!==openskyCountriesV30.join('|')){
      openskyCountriesV30=set; const sel=document.getElementById('mapCountryFilterV30');
-     if(sel){const old=sel.value;sel.innerHTML='<option value="ALL">País OpenSky: Todos</option>'+set.map(c=>`<option value="${String(c).replace(/"/g,'&quot;')}">${c}</option>`).join(''); if(set.includes(old))sel.value=old;}
+     if(sel){const old=sel.value;sel.innerHTML='<option value="ALL">País ADS-B: Todos</option>'+set.map(c=>`<option value="${String(c).replace(/"/g,'&quot;')}">${c}</option>`).join(''); if(set.includes(old))sel.value=old;}
    }
-   if(status)status.textContent='🔵 OpenSky: '+openskyStatesV30.length.toLocaleString('pt-BR')+' aeronaves';
- }catch(e){if(status)status.textContent='⚠️ OpenSky: '+e.message;}
+   if(status)status.textContent='🔵 adsb.fi: '+openskyStatesV30.length.toLocaleString('pt-BR')+' aeronaves';
+ }catch(e){if(status)status.textContent='⚠️ adsb.fi: '+e.message;}
  renderRDMapV21(true);
 }
 function openskyTypeV30(s){const c=Number(s.category); if(c===8)return 'Helicóptero'; if(c===9)return 'Planador'; if(c===14)return 'UAV'; if(c>=2&&c<=7)return 'Aeronave'; return 'Outro';}
@@ -1492,7 +1759,7 @@ function renderRDMapV21(fromOpenSky=false){
  const rows=useRD?rdRows:[]; const shownReal=useReal?realRows:[];
  const box=document.getElementById('mapFlightListV21'),count=document.getElementById('mapCountV21');if(!box)return;
  count.textContent=(rows.length+shownReal.length).toLocaleString('pt-BR');
- const realHtml=shownReal.slice(0,250).map(x=>`<div class="map-flight-row-v21" onclick="focusOpenSkyV30('${x.icao24||''}')"><div class="map-flight-top-v21"><div class="map-flight-brand-v22"><span style="color:#0b6b3a;font-size:18px">✈</span><b>${(x.callsign||x.icao24||'SEM CALLSIGN').trim()}</b></div><span class="map-status-v21">OpenSky</span></div><div class="map-flight-meta-v21"><span>🆔 ${x.icao24||'—'}</span><span>🌎 ${x.origin_country||'—'}</span><span>⬆ ${x.baro_altitude!=null?Math.round(x.baro_altitude*3.28084).toLocaleString('pt-BR')+' ft':'—'}</span><span>💨 ${x.velocity!=null?Math.round(x.velocity*1.94384)+' kt':'—'}</span></div></div>`).join('');
+ const realHtml=shownReal.slice(0,250).map(x=>`<div class="map-flight-row-v21" onclick="focusOpenSkyV30('${x.icao24||''}')"><div class="map-flight-top-v21"><div class="map-flight-brand-v22"><span style="color:#0b6b3a;font-size:18px">✈</span><b>${(x.callsign||x.icao24||'SEM CALLSIGN').trim()}</b></div><span class="map-status-v21">adsb.fi</span></div><div class="map-flight-meta-v21"><span>🆔 ${x.icao24||'—'}</span><span>🌎 ${x.origin_country||'—'}</span><span>⬆ ${x.baro_altitude!=null?Math.round(x.baro_altitude*3.28084).toLocaleString('pt-BR')+' ft':'—'}</span><span>💨 ${x.velocity!=null?Math.round(x.velocity*1.94384)+' kt':'—'}</span></div></div>`).join('');
  const rdHtml=effectiveRows.map(x=>{const ss=x.safety;return `<div class="map-flight-row-v21 ${x.blocked?'flight-blocked-v30':''}" onclick="focusMapAirportV21('${x.origin}')"><div class="map-flight-top-v21"><div class="map-flight-brand-v22"><img class="map-airline-logo-v22" src="${airlineLogoV22(x.airline)}" onerror="this.style.display='none'" alt=""><b>✈ ${x.flight} • ${x.origin} → ${x.dest}</b></div><span class="map-status-v21 ${x.blocked?'safety-block':'safety-ok'}">${x.blocked?'🚫 SEM AERONAVE COMPATÍVEL':'🟡 RD VIRTUAL'}</span></div><div class="map-flight-meta-v21"><span>🛩️ ${x.model}</span>${x.substituted?`<span>🔄 substituído de ${x.originalModel}</span>`:''}<span>🆔 ${x.reg}</span><span>🛫 ${ss.origin.toLocaleString('pt-BR')} m</span><span>🛬 ${ss.dest.toLocaleString('pt-BR')} m</span><span>📏 mín. ${ss.need.toLocaleString('pt-BR')} m</span></div></div>`;}).join('');
  box.innerHTML=(realHtml+rdHtml)||'<div style="padding:18px;color:#999">Nenhuma aeronave encontrada com os filtros selecionados.</div>';
  renderLiveRadarV29(rdSafeRows,shownReal);
