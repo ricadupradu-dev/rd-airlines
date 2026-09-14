@@ -50,6 +50,19 @@ app.get('/api/weather/:icao',async(req,res)=>{
   }catch(e){res.status(502).json({ok:false,error:e.message});}
 });
 
-app.use(express.static(root,{extensions:['html']}));
-app.get(/.*/,(req,res)=>res.sendFile(path.join(root,'index.html')));
-app.listen(PORT,()=>console.log(`RD AIRLINES V30 online on port ${PORT}`));
+app.use(express.static(root, { extensions: ['html'] }));
+
+app.get('/healthz', (req, res) => {
+  res.status(200).json({
+    ok: true,
+    service: 'rd-airlines'
+  });
+});
+
+app.get(/.*/, (req, res) => {
+  res.sendFile(path.join(root, 'index.html'));
+});
+
+app.listen(PORT, () => {
+  console.log(`RD AIRLINES V30 online on port ${PORT}`);
+});
