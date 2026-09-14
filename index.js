@@ -23,7 +23,12 @@ app.get('/api/opensky/states',async(req,res)=>{
  try{
    if(cache.data && Date.now()-cache.at<28000)return res.json(cache.data);
    const bearer=await getToken();
-   const r=await fetch(API_URL,{headers:{Authorization:`Bearer ${bearer}`}});
+  const r = await fetch(API_URL, {
+  headers: {
+    Authorization: `Bearer ${bearer}`,
+    Accept: 'application/json'
+  }
+});
    if(r.status===401){token=null;tokenExpiresAt=0;const b=await getToken();const retry=await fetch(API_URL,{headers:{Authorization:`Bearer ${b}`}});if(!retry.ok)throw new Error(`OpenSky HTTP ${retry.status}`);const d=await retry.json();cache={at:Date.now(),data:d};return res.json(d);}
    if(!r.ok){const txt=await r.text();throw new Error(`OpenSky HTTP ${r.status}${txt?': '+txt.slice(0,160):''}`);}
    const d=await r.json();cache={at:Date.now(),data:d};res.json(d);
