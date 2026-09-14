@@ -908,7 +908,13 @@ const RD_VIRTUAL_FLEET_MODELS_V30=[
  ['A330-200','RDP',1],['A320neo','RDP',4]
 ];
 const RD_VIRTUAL_FLEET_AIRPORTS_V30=['SDRS','GRU','GIG','SDU','REC','OPO'];
-let rdVirtualFleet100V30=JSON.parse(localStorage.getItem('rdVirtualFleet100V30')||'null');
+let rdVirtualFleet100V30 = JSON.parse(
+  localStorage.getItem('rdVirtualFleet100V30') || 'null'
+);
+
+if (!Array.isArray(rdVirtualFleet100V30)) {
+  rdVirtualFleet100V30 = [];
+}
 function createVirtualAircraftRecordV30(n, model, airline){
  const isRdp=airline==='RDP';
  const reg=isRdp?`CS-RDP${String(n).padStart(3,'0')}`:`PR-RD${String(n).padStart(3,'0')}`;
