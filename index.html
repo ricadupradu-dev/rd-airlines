@@ -1178,11 +1178,12 @@ function createVirtualAircraftRecordV30(n, model, airline){
 function buildVirtualFleet100V30(){
  const target=20;
  if(!Array.isArray(rdVirtualFleet100V30)) rdVirtualFleet100V30=[];
+ rdVirtualFleet100V30=rdVirtualFleet100V30.filter(Boolean).filter(x=>x&&x.id);
  if(rdVirtualFleet100V30.length>target) rdVirtualFleet100V30=rdVirtualFleet100V30.slice(0,target);
  let nextId=rdVirtualFleet100V30.length+1;
  // Mantém uma frota inicial de 20 aeronaves virtuais selecionáveis.
  while(rdVirtualFleet100V30.length<target){
-   const idx=(nextId-101)%RD_VIRTUAL_FLEET_MODELS_V30.length;
+   const idx=(nextId-1)%RD_VIRTUAL_FLEET_MODELS_V30.length;
    const entry=RD_VIRTUAL_FLEET_MODELS_V30[idx];
    const model=entry[0], airline=entry[1];
    rdVirtualFleet100V30.push(createVirtualAircraftRecordV30(nextId,model,airline));
@@ -1190,7 +1191,7 @@ function buildVirtualFleet100V30(){
  }
  // Nova política: todas as 20 aeronaves virtuais ficam no HANGAR até o usuário enviá-las ao gate.
  // Ao abrir esta versão, qualquer aeronave que esteja em GATE/ASSIGNED também retorna ao HANGAR.
- if(localStorage.getItem('rdAllAircraftHangarV30')!=='4'){
+ if(localStorage.getItem('rdAllAircraftHangarV30')!=='5'){
    rdVirtualFleet100V30=rdVirtualFleet100V30.map((x,i)=>{
      const airport=x.airport || (x.airline==='RDP'?'OPO':RD_VIRTUAL_FLEET_AIRPORTS_V30[i%RD_VIRTUAL_FLEET_AIRPORTS_V30.length]);
      return {...x,status:'PARKED',airport};
@@ -2125,6 +2126,7 @@ function hangarReturnToStorageV30(id){
 }
 function renderHangarV30(){
   hangarEnsureV30();
+  rdVirtualFleet100V30=Array.isArray(rdVirtualFleet100V30)?rdVirtualFleet100V30.filter(Boolean):[];
   const list=document.getElementById('hangarListV30'); if(!list)return;
   const q=(document.getElementById('hangarSearchV30')?.value||'').toLowerCase();
   const air=document.getElementById('hangarAirlineV30')?.value||'ALL';
@@ -2285,5 +2287,15 @@ document.addEventListener('DOMContentLoaded',()=>setTimeout(initRDGlobalMarket,5
 <style>
 .market-summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.rd-market-card{transition:transform .15s ease,box-shadow .15s ease}.rd-market-card:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(0,0,0,.25)}.rd-market-price{font-size:24px;font-weight:900;color:var(--gold2)}#rdGlobalMarketChartWrap{overflow:hidden}.market-toolbar input,.market-toolbar select{padding:11px 12px;border-radius:10px;border:1px solid rgba(255,215,0,.35);background:rgba(0,0,0,.18);color:inherit}@media(max-width:900px){.market-summary-grid{grid-template-columns:1fr 1fr}.market-toolbar{grid-template-columns:1fr!important}}
 </style>
+<script>
+window.addEventListener('load',()=>{
+  try{
+    if(typeof buildVirtualFleet100V30==='function') buildVirtualFleet100V30();
+    if(typeof initVirtualFleet100V30==='function') initVirtualFleet100V30();
+    if(typeof renderVirtualFleet100V30==='function') renderVirtualFleet100V30();
+    if(typeof renderHangarV30==='function') renderHangarV30();
+  }catch(e){console.error('RD AIRLINES init:',e);}
+});
+</script>
 </body>
 </html>
