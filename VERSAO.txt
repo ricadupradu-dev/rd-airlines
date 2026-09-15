@@ -1,2 +1,1 @@
-RD AIRLINES V30 — NOVAS ROTAS INTERNACIONAIS
-GRU-LSZH x3; OPO-FNBJ; OPO-FQMA; OPO-GVAC; OPO-SCEL; OPO-LEMD
+V31.2 — Novas rotas RD AIRLINES e RD AIRLINES-PORTUGAL adicionadas ao mapa, painel de rotas e Selecionar aeronave e tripulação.

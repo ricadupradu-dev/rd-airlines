@@ -221,6 +221,9 @@ header .logo img{width:180px!important;height:48px!important;object-fit:contain!
 .leaflet-popup-content-wrapper.rd-detail-popup-compact{padding:0;border-radius:12px}.leaflet-popup.rd-detail-popup-compact .leaflet-popup-content{margin:6px;width:286px!important;max-width:286px}.leaflet-popup.rd-detail-popup-compact .leaflet-popup-content-wrapper{max-width:286px;overflow:hidden}.leaflet-popup.rd-detail-popup-compact .leaflet-popup-tip{box-shadow:0 2px 3px rgba(0,0,0,.15)}
 @media(max-width:700px){.rd-aircraft-detail-v30{width:260px;max-width:68vw;max-height:52vh}.rd-aircraft-detail-v30 .hero{height:82px}.rd-aircraft-detail-v30 .callsign{font-size:18px}.rd-aircraft-detail-v30 .sub{font-size:10px}.leaflet-popup.rd-detail-popup-compact .leaflet-popup-content{width:260px!important;max-width:260px}}
 </style>
+\n<style id="rd-airport-panel-v31-css">
+.rd-airport-panel-v31{font-family:Arial,sans-serif;background:#090909;color:#f5f2e8;border:1px solid #8b6b20;border-radius:14px;overflow:hidden;width:520px;max-width:calc(100vw - 42px);box-shadow:0 14px 40px #000b}.rd-airport-photo-v31{height:155px;background:#111 center/cover no-repeat;position:relative}.rd-airport-photo-v31:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#0001,#000d)}.rd-airport-photo-title-v31{position:absolute;z-index:2;left:15px;bottom:13px}.rd-airport-photo-title-v31 b{font-size:22px;color:#f0d36b;display:block}.rd-airport-photo-title-v31 span{font-size:11px;color:#fff}.rd-airport-summary-v31{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;padding:10px 12px;background:#0d0d0d;border-bottom:1px solid #292929}.rd-airport-stat-v31{background:#141414;border:1px solid #292929;border-radius:9px;padding:8px;text-align:center}.rd-airport-stat-v31 b{display:block;color:#f0d36b;font-size:10px}.rd-airport-stat-v31 strong{font-size:19px}.rd-airport-grid-v31{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px}.rd-airport-box-v31{background:#111;border:1px solid #292929;border-radius:9px;padding:10px;min-width:0}.rd-airport-box-v31 b{display:block;color:#f0d36b;font-size:11px;margin-bottom:4px}.rd-airport-wide-v31{grid-column:1/-1}.rd-airport-list-v31{max-height:175px;overflow:auto;margin-top:6px}.rd-airport-row-v31{padding:8px 0;border-top:1px solid #292929;font-size:11px;line-height:1.35}.rd-airport-row-v31:first-child{border-top:0}.rd-airport-row-v31 strong{color:#fff;font-size:12px}.rd-airport-route-v31{color:#ddd}.rd-airport-meta-v31{color:#999;font-size:10px}.rd-airport-badge-v31{display:inline-block;border:1px solid #725b20;border-radius:5px;padding:2px 5px;color:#f0d36b;font-size:9px;margin-left:4px}.rd-airport-status-v31{color:#9ee29e;font-size:10px}.rd-airport-loading-v31{color:#bbb;font-size:11px;padding:5px 0}.rd-airport-weather-v31{line-height:1.45;font-size:11px}.rd-airport-weather-v31 .raw{color:#bbb;margin-top:5px;word-break:break-word}.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#090909!important;color:#fff!important}.leaflet-popup-content{margin:0!important}.leaflet-popup-close-button{color:#fff!important;z-index:5}@media(max-width:650px){.rd-airport-summary-v31{grid-template-columns:1fr 1fr 1fr}.rd-airport-grid-v31{grid-template-columns:1fr}.rd-airport-wide-v31{grid-column:auto}}
+</style>
 </head>
 <body>
 <div class="identity-strip"><span>RD AIRLINES</span> • IDENTIDADE PREMIUM <b>PRETO + DOURADO</b></div><header>
@@ -1076,6 +1079,10 @@ const rdRoutesPT = [
     'Madrid'
   ]
 ];
+// Rotas solicitadas — RD AIRLINES / RD AIRLINES-PORTUGAL
+rdRoutesBR.push(['SBGR','OBBI','São Paulo / Guarulhos','Bahrain'],['SBGR','GVAC','São Paulo / Guarulhos','Sal / Cabo Verde'],['SBGR','CYVR','São Paulo / Guarulhos','Vancouver'],['SBGR','KSEA','São Paulo / Guarulhos','Seattle'],['SBGR','KSFO','São Paulo / Guarulhos','San Francisco'],['SBRF','GOBD','Recife / Guararapes','Dakar / Senegal'],['SBSG','DTTA','Goiânia / Santa Genoveva','Tunis / Tunísia'],['SBGR','OEJN','São Paulo / Guarulhos','Jeddah'],['SBGR','UUEE','São Paulo / Guarulhos','Moscow / Sheremetyevo'],['SBGR','SCIP','São Paulo / Guarulhos','Mataveri / Ilha de Páscoa'],['OBBI','SBGR','Bahrain','São Paulo / Guarulhos'],['GVAC','SBGR','Sal / Cabo Verde','São Paulo / Guarulhos'],['CYVR','SBGR','Vancouver','São Paulo / Guarulhos'],['KSEA','SBGR','Seattle','São Paulo / Guarulhos'],['KSFO','SBGR','San Francisco','São Paulo / Guarulhos'],['GOBD','SBRF','Dakar / Senegal','Recife / Guararapes'],['DTTA','SBSG','Tunis / Tunísia','Goiânia / Santa Genoveva'],['OEJN','SBGR','Jeddah','São Paulo / Guarulhos'],['UUEE','SBGR','Moscow / Sheremetyevo','São Paulo / Guarulhos'],['SCIP','SBGR','Mataveri / Ilha de Páscoa','São Paulo / Guarulhos']);
+rdRoutesPT.push(['LPPR','LPPT','Porto','Lisboa'],['LPPR','RJAA','Porto','Tokyo Narita'],['LPPR','HAAB','Porto','Adis Abeba'],['LPPR','GVAC','Porto','Sal / Cabo Verde'],['LPPR','FQMA','Porto','Maputo / Moçambique'],['LPPT','LPPR','Lisboa','Porto'],['RJAA','LPPR','Tokyo Narita','Porto'],['HAAB','LPPR','Adis Abeba','Porto'],['GVAC','LPPR','Sal / Cabo Verde','Porto'],['FQMA','LPPR','Maputo / Moçambique','Porto']);
+
 const RD_REGIONAL_ROUTES_PT_V30 = [
   ['OPO','LPCS','Porto','Cascais','ATR 72-600'],['LPCS','OPO','Cascais','Porto','ATR 72-600'],
   ['OPO','LPBG','Porto','Bragança','ATR 72-600'],['LPBG','OPO','Bragança','Porto','ATR 72-600'],
@@ -1594,7 +1601,7 @@ const RD_SIMBRIEF_AIRCRAFT={A359:'A350-900',A35K:'A350-1000',A20N:'A320neo',A320
 function initSimBrief(){const f=document.getElementById('simbriefFlightSelect'),a=document.getElementById('simbriefAircraftSelect');if(!f||!a)return;f.innerHTML=RD_SIMBRIEF_FLIGHTS.map((x,i)=>`<option value="${i}">${x[0]} • ${x[1]} → ${x[2]} • ${x[3]}</option>`).join('');a.innerHTML=Object.entries(RD_SIMBRIEF_AIRCRAFT).map(([k,v])=>`<option value="${k}">${k} — ${v}</option>`).join('');a.value=RD_SIMBRIEF_FLIGHTS[0][5];renderSimBriefSelection();}
 function renderSimBriefSelection(){const f=document.getElementById('simbriefFlightSelect'),a=document.getElementById('simbriefAircraftSelect'),box=document.getElementById('simbriefSelectedCard');if(!f||!a||!box)return;const x=RD_SIMBRIEF_FLIGHTS[Number(f.value)||0];if(!x)return;if(!a.dataset.manual)a.value=x[5];a.dataset.manual='1';box.innerHTML=`<h3>${x[0]} • ${x[1]} → ${x[2]}</h3><p><b>Horário:</b> ${x[3]} → ${x[4]}</p><p><b>Aeronave:</b> ${a.value} — ${RD_SIMBRIEF_AIRCRAFT[a.value]||a.value}</p><p><b>Campos SimBrief:</b> ORIG <span class="tag">${x[1]}</span> DEST <span class="tag">${x[2]}</span> TYPE <span class="tag">${a.value}</span></p>`;}
 function simBriefData(){const f=document.getElementById('simbriefFlightSelect'),a=document.getElementById('simbriefAircraftSelect'),x=RD_SIMBRIEF_FLIGHTS[Number(f.value)||0];return `RD AIRLINES\nFlight: ${x[0]}\nOrigin: ${x[1]}\nDestination: ${x[2]}\nDeparture: ${x[3]}\nArrival: ${x[4]}\nAircraft ICAO: ${a.value}\nAircraft: ${RD_SIMBRIEF_AIRCRAFT[a.value]||a.value}`;}
-function rdSimBriefICAO(apt){const map={GRU:'SBGR',GIG:'SBGL',SDU:'SBRJ',SDRS:'SDRS',REC:'SBRF',OPO:'LPPR',USH:'SAWH',KJFK:'KJFK',KSFO:'KSFO',SBBR:'SBBR',SBSP:'SBSP',SBKP:'SBKP',SBCT:'SBCT',SBSJ:'SBSJ',SBEG:'SBEG',SPJC:'SPJC',OEJN:'OEJN',UUEE:'UUEE',SOCA:'SOCA',GOBD:'GOBD',DTTA:'DTTA',CYVR:'CYVR',KSEA:'KSEA',RJAA:'RJAA',SCIP:'SCIP',FQMA:'FQMA',FNBJ:'FNBJ',LSZH:'LSZH',SCEL:'SCEL',LEMD:'LEMD',GVAC:'GVAC'};return map[String(apt||'').toUpperCase()]||String(apt||'').toUpperCase();}
+function rdSimBriefICAO(apt){const map={SBGR:'SBGR',SBRF:'SBRF',SBSG:'SBSG',LPPR:'LPPR',LPPT:'LPPT',GRU:'SBGR',GIG:'SBGL',SDU:'SBRJ',SDRS:'SDRS',REC:'SBRF',OPO:'LPPR',USH:'SAWH',KJFK:'KJFK',KSFO:'KSFO',SBBR:'SBBR',SBSP:'SBSP',SBKP:'SBKP',SBCT:'SBCT',SBSJ:'SBSJ',SBEG:'SBEG',SPJC:'SPJC',OEJN:'OEJN',UUEE:'UUEE',SOCA:'SOCA',GOBD:'GOBD',DTTA:'DTTA',CYVR:'CYVR',KSEA:'KSEA',RJAA:'RJAA',SCIP:'SCIP',FQMA:'FQMA',FNBJ:'FNBJ',LSZH:'LSZH',SCEL:'SCEL',LEMD:'LEMD',GVAC:'GVAC'};return map[String(apt||'').toUpperCase()]||String(apt||'').toUpperCase();}
 function rdSimBriefAircraftCode(modelOrCode){const m=String(modelOrCode||'').trim();if(RD_SIMBRIEF_AIRCRAFT[m])return m;const map={'A350-900':'A359','A350-1000':'A35K','A320neo':'A20N','A320-200':'A320','A321neo':'A21N','A321ceo':'A321','A330neo':'A339','A330-200':'A332','A340-300':'A343','A340-600':'A346','A380-800':'A388','E195-E2':'E295','ATR 72-600':'AT72','Cessna 208 Caravan':'C208'};return map[m]||m;}
 function openSimBriefForRDFlight(flight){const x=(RD_MAP_V21||[]).find(r=>String(r.flight)===String(flight));if(!x){alert('Voo não encontrado para o SimBrief.');return;}const type=rdSimBriefAircraftCode(x.type||x.aircraft||'A359');const orig=rdSimBriefICAO(x.origin),dest=rdSimBriefICAO(x.dest);const fltnum=String(x.flight).replace(/^RDP?/,'').replace(/^RD/,'')||String(x.flight);const qs=new URLSearchParams({airline:'RD',fltnum,type,orig,dest,navlog:'1',stepclimbs:'1',notams:'1',maps:'detail'});const url='https://dispatch.simbrief.com/options/custom?'+qs.toString();try{localStorage.setItem('rdLastSimBriefDispatch',JSON.stringify({flight:x.flight,orig,dest,type,at:new Date().toISOString(),url}));}catch(e){}window.open(url,'_blank','noopener');const out=document.getElementById('simbriefCopyStatus');if(out)out.textContent=`✓ SimBrief preparado: ${orig} → ${dest}.`;return url;}
 function sendCurrentFleetToSimBrief(){const id=document.getElementById('v30Fleet100Aircraft')?.value;const item=(rdVirtualFleet100V30||[]).find(x=>x.id===id);if(!item||!item.route){alert('Selecione uma aeronave com uma rota atribuída primeiro.');return;}openSimBriefForRDFlight(item.route);}
@@ -1653,14 +1660,29 @@ const RD_MAP_V21 = [
  {flight:'RDP3022',airline:'RDP',origin:'PDL',dest:'LPGR',model:'Cessna 208 Caravan',reg:'CS-RDP22',type:'Regional',status:'No solo',pilot:'Bot'},
  {flight:'RDP3023',airline:'RDP',origin:'PDL',dest:'LPPI',model:'ATR 72-600',reg:'CS-RDP23',type:'Regional',status:'No solo',pilot:'IA'},
  {flight:'RDP3024',airline:'RDP',origin:'PDL',dest:'LPSJ',model:'Cessna 208 Caravan',reg:'CS-RDP24',type:'Regional',status:'No solo',pilot:'Bot'},
- {flight:'RDP3025',airline:'RDP',origin:'FNC',dest:'LPPS',model:'ATR 72-600',reg:'CS-RDP25',type:'Regional',status:'No solo',pilot:'IA'}
+ {flight:'RDP3025',airline:'RDP',origin:'FNC',dest:'LPPS',model:'ATR 72-600',reg:'CS-RDP25',type:'Regional',status:'No solo',pilot:'IA'},
+ {flight:'RD1101',airline:'RD',origin:'SBGR',dest:'OBBI',model:'A350-900',reg:'PR-RD101',type:'Comercial',status:'No solo',pilot:'IA'},
+ {flight:'RD1102',airline:'RD',origin:'SBGR',dest:'GVAC',model:'A321neo',reg:'PR-RD102',type:'Comercial',status:'No solo',pilot:'IA'},
+ {flight:'RD1103',airline:'RD',origin:'SBGR',dest:'CYVR',model:'A350-900',reg:'PR-RD103',type:'Comercial',status:'No solo',pilot:'IA'},
+ {flight:'RD1104',airline:'RD',origin:'SBGR',dest:'KSEA',model:'A350-900',reg:'PR-RD104',type:'Comercial',status:'No solo',pilot:'IA'},
+ {flight:'RD1105',airline:'RD',origin:'SBGR',dest:'KSFO',model:'A350-900',reg:'PR-RD105',type:'Comercial',status:'No solo',pilot:'IA'},
+ {flight:'RD1106',airline:'RD',origin:'SBRF',dest:'GOBD',model:'A320neo',reg:'PR-RD106',type:'Comercial',status:'No solo',pilot:'Bot'},
+ {flight:'RD1107',airline:'RD',origin:'SBSG',dest:'DTTA',model:'A320neo',reg:'PR-RD107',type:'Comercial',status:'No solo',pilot:'Bot'},
+ {flight:'RD1108',airline:'RD',origin:'SBGR',dest:'OEJN',model:'A350-900',reg:'PR-RD108',type:'Comercial',status:'No solo',pilot:'IA'},
+ {flight:'RD1109',airline:'RD',origin:'SBGR',dest:'UUEE',model:'A350-900',reg:'PR-RD109',type:'Comercial',status:'No solo',pilot:'IA'},
+ {flight:'RD1110',airline:'RD',origin:'SBGR',dest:'SCIP',model:'A321XLR',reg:'PR-RD110',type:'Comercial',status:'No solo',pilot:'IA'},
+ {flight:'RDP2101',airline:'RDP',origin:'LPPR',dest:'LPPT',model:'A320neo',reg:'CS-RDP31',type:'Comercial',status:'No solo',pilot:'IA'},
+ {flight:'RDP2102',airline:'RDP',origin:'LPPR',dest:'RJAA',model:'A350-900',reg:'CS-RDP32',type:'Comercial',status:'No solo',pilot:'IA'},
+ {flight:'RDP2103',airline:'RDP',origin:'LPPR',dest:'HAAB',model:'A350-900',reg:'CS-RDP33',type:'Comercial',status:'No solo',pilot:'IA'},
+ {flight:'RDP2104',airline:'RDP',origin:'LPPR',dest:'GVAC',model:'A321neo',reg:'CS-RDP34',type:'Comercial',status:'No solo',pilot:'Bot'},
+ {flight:'RDP2105',airline:'RDP',origin:'LPPR',dest:'FQMA',model:'A350-900',reg:'CS-RDP35',type:'Comercial',status:'No solo',pilot:'IA'}
 ];
-const RD_MAP_AIRPORTS_V21={SDRS:['Resende / RJ',-22.478,-44.480],GRU:['Guarulhos / SP',-23.435,-46.473],GIG:['Galeão / RJ',-22.809,-43.250],SDU:['Santos Dumont / RJ',-22.910,-43.164],REC:['Recife / PE',-8.126,-34.923],OPO:['Porto / Portugal',41.242,-8.678],PDL:['Ponta Delgada / Açores',37.741,-25.698],FNC:['Madeira / Funchal',32.697,-16.774],LPPS:['Porto Santo / Madeira',33.073,-16.350],LPCS:['Cascais / Portugal',38.726,-9.355],LPBG:['Bragança / Portugal',41.857,-6.708],LPCB:['Castelo Branco / Portugal',39.849,-7.442],LPCH:['Chaves / Portugal',41.722,-7.463],LPCO:['Coimbra / Portugal',40.156,-8.469],LPEV:['Évora / Portugal',38.530,-7.892],LPSO:['Ponte de Sor / Portugal',39.195,-8.058],LPPM:['Portimão / Portugal',37.144,-8.584],LPVR:['Vila Real / Portugal',41.276,-7.720],LPVZ:['Viseu / Portugal',40.726,-7.889],LPCR:['Corvo / Açores',39.672,-31.114],LPGR:['Graciosa / Açores',39.093,-28.030],LPPI:['Pico / Açores',38.554,-28.441],LPSJ:['São Jorge / Açores',38.666,-28.175],USH:['Ushuaia / Argentina',-54.843,-68.295],KJFK:['New York / JFK',40.6413,-73.7781],FQMA:['Maputo / Moçambique',-25.9208,32.5726],FNBJ:['Luanda / Angola',-8.8584,13.2312],LSZH:['Zurich / Suíça',47.4582,8.5555],SCEL:['Santiago / Chile',-33.3930,-70.7858],LEMD:['Madrid / Espanha',40.4720,-3.5609]};
+const RD_MAP_AIRPORTS_V21={SBGR:['São Paulo / Guarulhos',-23.435,-46.473],SBRF:['Recife / Guararapes',-8.126,-34.923],SBSG:['Goiânia / Santa Genoveva',-16.632,-49.221],OBBI:['Bahrain / Bahrain International',26.2708,50.6336],LPPR:['Porto / Portugal',41.242,-8.678],LPPT:['Lisboa / Humberto Delgado',38.7742,-9.1342],KSEA:['Seattle / Tacoma',47.449,-122.309],SDRS:['Resende / RJ',-22.478,-44.480],GRU:['Guarulhos / SP',-23.435,-46.473],GIG:['Galeão / RJ',-22.809,-43.250],SDU:['Santos Dumont / RJ',-22.910,-43.164],REC:['Recife / PE',-8.126,-34.923],OPO:['Porto / Portugal',41.242,-8.678],PDL:['Ponta Delgada / Açores',37.741,-25.698],FNC:['Madeira / Funchal',32.697,-16.774],LPPS:['Porto Santo / Madeira',33.073,-16.350],LPCS:['Cascais / Portugal',38.726,-9.355],LPBG:['Bragança / Portugal',41.857,-6.708],LPCB:['Castelo Branco / Portugal',39.849,-7.442],LPCH:['Chaves / Portugal',41.722,-7.463],LPCO:['Coimbra / Portugal',40.156,-8.469],LPEV:['Évora / Portugal',38.530,-7.892],LPSO:['Ponte de Sor / Portugal',39.195,-8.058],LPPM:['Portimão / Portugal',37.144,-8.584],LPVR:['Vila Real / Portugal',41.276,-7.720],LPVZ:['Viseu / Portugal',40.726,-7.889],LPCR:['Corvo / Açores',39.672,-31.114],LPGR:['Graciosa / Açores',39.093,-28.030],LPPI:['Pico / Açores',38.554,-28.441],LPSJ:['São Jorge / Açores',38.666,-28.175],USH:['Ushuaia / Argentina',-54.843,-68.295],KJFK:['New York / JFK',40.6413,-73.7781],FQMA:['Maputo / Moçambique',-25.9208,32.5726],FNBJ:['Luanda / Angola',-8.8584,13.2312],LSZH:['Zurich / Suíça',47.4582,8.5555],SCEL:['Santiago / Chile',-33.3930,-70.7858],LEMD:['Madrid / Espanha',40.4720,-3.5609]};
 let rdLiveMapV29=null;
 let rdLiveMarkersV29=[];
 let rdLiveRoutesV29=[];
 const RD_SIM_FLIGHT_COORDS_V29={
-  SDRS:RD_MAP_AIRPORTS_V21.SDRS,GRU:RD_MAP_AIRPORTS_V21.GRU,GIG:RD_MAP_AIRPORTS_V21.GIG,SDU:RD_MAP_AIRPORTS_V21.SDU,REC:RD_MAP_AIRPORTS_V21.REC,OPO:RD_MAP_AIRPORTS_V21.OPO,PDL:RD_MAP_AIRPORTS_V21.PDL,FNC:RD_MAP_AIRPORTS_V21.FNC,LPPS:RD_MAP_AIRPORTS_V21.LPPS,LPCS:RD_MAP_AIRPORTS_V21.LPCS,LPBG:RD_MAP_AIRPORTS_V21.LPBG,LPCB:RD_MAP_AIRPORTS_V21.LPCB,LPCH:RD_MAP_AIRPORTS_V21.LPCH,LPCO:RD_MAP_AIRPORTS_V21.LPCO,LPEV:RD_MAP_AIRPORTS_V21.LPEV,LPSO:RD_MAP_AIRPORTS_V21.LPSO,LPPM:RD_MAP_AIRPORTS_V21.LPPM,LPVR:RD_MAP_AIRPORTS_V21.LPVR,LPVZ:RD_MAP_AIRPORTS_V21.LPVZ,LPCR:RD_MAP_AIRPORTS_V21.LPCR,LPGR:RD_MAP_AIRPORTS_V21.LPGR,LPPI:RD_MAP_AIRPORTS_V21.LPPI,LPSJ:RD_MAP_AIRPORTS_V21.LPSJ,
+  SDRS:RD_MAP_AIRPORTS_V21.SDRS,GRU:RD_MAP_AIRPORTS_V21.GRU,GIG:RD_MAP_AIRPORTS_V21.GIG,SDU:RD_MAP_AIRPORTS_V21.SDU,REC:RD_MAP_AIRPORTS_V21.REC,OPO:RD_MAP_AIRPORTS_V21.OPO,PDL:RD_MAP_AIRPORTS_V21.PDL,FNC:RD_MAP_AIRPORTS_V21.FNC,LPPS:RD_MAP_AIRPORTS_V21.LPPS,LPCS:RD_MAP_AIRPORTS_V21.LPCS,LPBG:RD_MAP_AIRPORTS_V21.LPBG,LPCB:RD_MAP_AIRPORTS_V21.LPCB,LPCH:RD_MAP_AIRPORTS_V21.LPCH,LPCO:RD_MAP_AIRPORTS_V21.LPCO,LPEV:RD_MAP_AIRPORTS_V21.LPEV,LPSO:RD_MAP_AIRPORTS_V21.LPSO,LPPM:RD_MAP_AIRPORTS_V21.LPPM,LPVR:RD_MAP_AIRPORTS_V21.LPVR,LPVZ:RD_MAP_AIRPORTS_V21.LPVZ,LPCR:RD_MAP_AIRPORTS_V21.LPCR,LPGR:RD_MAP_AIRPORTS_V21.LPGR,LPPI:RD_MAP_AIRPORTS_V21.LPPI,LPSJ:RD_MAP_AIRPORTS_V21.LPSJ,SBGR:RD_MAP_AIRPORTS_V21.SBGR,SBRF:RD_MAP_AIRPORTS_V21.SBRF,SBSG:RD_MAP_AIRPORTS_V21.SBSG,OBBI:RD_MAP_AIRPORTS_V21.OBBI,LPPR:RD_MAP_AIRPORTS_V21.LPPR,LPPT:RD_MAP_AIRPORTS_V21.LPPT,KSEA:RD_MAP_AIRPORTS_V21.KSEA,
   SBCT:['Curitiba / PR',-25.528,-49.176],GVAC:['Sal / Cabo Verde',16.741,-22.949],KLAX:['Los Angeles / EUA',33.942,-118.408],KSFO:['San Francisco / EUA',37.621,-122.379],SPJC:['Lima / Peru',-12.021,-77.114],OEJN:['Jeddah / Arábia Saudita',21.679,39.156],SBBR:['Brasília / DF',-15.869,-47.921],HECA:['Cairo / Egito',30.122,31.406],FAO:['Faro / Portugal',37.014,-7.966],EGLL:['London Heathrow',51.470,-0.454],RJAA:['Tokyo Narita',35.772,140.392],CYVR:['Vancouver / Canadá',49.196,-123.181],USH:['Ushuaia / Argentina',-54.843,-68.295],KJFK:['New York / JFK',40.6413,-73.7781],FQMA:['Maputo / Moçambique',-25.9208,32.5726],FNBJ:['Luanda / Angola',-8.8584,13.2312],LSZH:['Zurich / Suíça',47.4582,8.5555],SCEL:['Santiago / Chile',-33.3930,-70.7858],LEMD:['Madrid / Espanha',40.4720,-3.5609]
 };
 function rdCoordV29(code){return RD_SIM_FLIGHT_COORDS_V29[code]||RD_MAP_AIRPORTS_V21[code]||['',0,0]}
@@ -1778,7 +1800,13 @@ const RD_RUNWAY_DATA_V30={
   GOBD:{name:'Blaise Diagne / Dakar',icao:'GOBD',runways:[3500],metar:'GOBD'},
   DTTA:{name:'Tunis-Carthage',icao:'DTTA',runways:[2840,2840],metar:'DTTA'},
   SOCA:{name:'Cayenne',icao:'SOCA',runways:[3200],metar:'SOCA'},
-  SBEG:{name:'Manaus',icao:'SBEG',runways:[2700],metar:'SBEG'}
+  SBEG:{name:'Manaus',icao:'SBEG',runways:[2700],metar:'SBEG'},
+  OBBI:{name:'Bahrain International',icao:'OBBI',runways:[3964,2530],metar:'OBBI'},
+  SBSG:{name:'Goiânia/Santa Genoveva',icao:'SBSG',runways:[2500],metar:'SBSG'},
+  LPPT:{name:'Lisboa/Humberto Delgado',icao:'LPPT',runways:[3805,2400],metar:'LPPT'},
+  KSEA:{name:'Seattle-Tacoma',icao:'KSEA',runways:[3627,2875,2843],metar:'KSEA'},
+  SCIP:{name:'Mataveri / Ilha de Páscoa',icao:'SCIP',runways:[3318],metar:'SCIP'},
+  UUEE:{name:'Moscow/Sheremetyevo',icao:'UUEE',runways:[3700,3550,3200],metar:'UUEE'}
 };
 const RD_AIRCRAFT_MIN_RUNWAY_V30={
   'Cessna 208 Caravan':900,'ATR 72-600':1200,'E195-E2':1800,'A320-200':2100,'A320neo':2100,
@@ -2547,6 +2575,87 @@ window.addEventListener('load',()=>{
     route?.addEventListener('change',restorePdfInfoV30);
     aircraft?.addEventListener('change',restorePdfInfoV30);
   });
+})();
+</script>
+
+\n<script id="rd-airport-panel-v31-js">
+(function(){
+  const PHOTO='https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1200&q=80';
+  function esc(v){return String(v??'—').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+  function airportInfoV31(code){const d=typeof RD_MAP_AIRPORTS_V21!=='undefined'?RD_MAP_AIRPORTS_V21[code]:null;const r=typeof RD_RUNWAY_DATA_V30!=='undefined'?RD_RUNWAY_DATA_V30[code]:null;return {code,name:d?.[0]||r?.name||code,lat:d?.[1],lon:d?.[2],icao:r?.icao||code,runways:r?.runways||[]};}
+  function routesAtAirportV31(code){const routes=typeof RD_MAP_V21!=='undefined'?RD_MAP_V21:[];return {arr:routes.filter(f=>!f.demo&&f.dest===code),dep:routes.filter(f=>!f.demo&&f.origin===code)};}
+  function groundAtAirportV31(code){let virtual=[];try{virtual=(typeof rdVirtualFleet100V30!=='undefined'?rdVirtualFleet100V30:[]).filter(x=>x&&x.airport===code&&x.status!=='ASSIGNED');}catch(e){}const info=airportInfoV31(code),real=[];try{if(Array.isArray(openskyStatesV30)&&Number.isFinite(info.lat)&&Number.isFinite(info.lon)){openskyStatesV30.forEach(x=>{if(!x.on_ground||x.latitude==null||x.longitude==null)return;const dx=(x.longitude-info.lon)*Math.cos(info.lat*Math.PI/180),dy=x.latitude-info.lat;if(Math.sqrt(dx*dx+dy*dy)<0.45)real.push(x);});}}catch(e){}return {virtual,real};}
+  function airlineLabel(f){return f.airline==='RDP'?'RD AIRLINES-PORTUGAL':'RD AIRLINES';}
+  function flightRowV31(f,kind){const direction=kind==='arr'?`<b>${esc(f.origin)}</b> → <b>${esc(f.dest)}</b>`:`<b>${esc(f.origin)}</b> → <b>${esc(f.dest)}</b>`;const phase=f.phase||f.status||'Programado';return `<div class="rd-airport-row-v31"><strong>${esc(f.flight||'RD')}</strong><span class="rd-airport-badge-v31">${esc(airlineLabel(f))}</span><div class="rd-airport-route-v31">${direction}</div><div class="rd-airport-meta-v31">✈ ${esc(f.model||f.type||'Aeronave')} • ${esc(f.reg||'Matrícula não definida')} • ${esc(phase)}</div></div>`;}
+  function listHtmlV31(items,kind){if(!items.length)return '<div class="rd-airport-loading-v31">Nenhum voo virtual cadastrado para este movimento.</div>';return '<div class="rd-airport-list-v31">'+items.slice(0,15).map(f=>flightRowV31(f,kind)).join('')+'</div>';}
+  function airportPopupHtmlV31(code){const a=airportInfoV31(code),rd=routesAtAirportV31(code),g=groundAtAirportV31(code),totalGround=g.virtual.length+g.real.length;const run=a.runways.length?a.runways.map((m,i)=>`Pista ${i+1}: <b>${Number(m).toLocaleString('pt-BR')} m</b>`).join('<br>'):'Dados de pista não cadastrados';return `<div class="rd-airport-panel-v31" data-airport="${esc(code)}"><div class="rd-airport-photo-v31" style="background-image:url('${PHOTO}')"><div class="rd-airport-photo-title-v31"><b>${esc(code)} — ${esc(a.name)}</b><span>ICAO: ${esc(a.icao)} • painel operacional RD AIRLINES</span></div></div><div class="rd-airport-summary-v31"><div class="rd-airport-stat-v31"><b>CHEGADAS</b><strong>${rd.arr.length}</strong></div><div class="rd-airport-stat-v31"><b>PARTIDAS</b><strong>${rd.dep.length}</strong></div><div class="rd-airport-stat-v31"><b>NO SOLO</b><strong>${totalGround}</strong></div></div><div class="rd-airport-grid-v31"><div class="rd-airport-box-v31"><b>🛬 CHEGADAS — DETALHADAS</b>${listHtmlV31(rd.arr,'arr')}</div><div class="rd-airport-box-v31"><b>🛫 PARTIDAS — DETALHADAS</b>${listHtmlV31(rd.dep,'dep')}</div><div class="rd-airport-box-v31"><b>🅿️ AERONAVES NO SOLO</b><div class="rd-airport-list-v31">${g.virtual.slice(0,10).map(x=>`<div class="rd-airport-row-v31"><strong>🟡 ${esc(x.reg)}</strong><span class="rd-airport-badge-v31">${esc(x.airline==='RDP'?'RDP':'RD')}</span><div class="rd-airport-route-v31">${esc(x.model)}</div><div class="rd-airport-meta-v31">${esc(x.status==='GATE'?'No gate':'Estacionada')} • rota: ${esc(x.route||'Sem rota')}</div></div>`).join('')||'<div class="rd-airport-loading-v31">Nenhuma aeronave virtual no solo.</div>'}${g.real.slice(0,10).map(x=>`<div class="rd-airport-row-v31"><strong>🔵 ${esc((x.callsign||x.icao24||'ADS-B').trim())}</strong><div class="rd-airport-meta-v31">ADS-B real • ${esc(x.origin_country||'País não informado')}</div></div>`).join('')}</div></div><div class="rd-airport-box-v31"><b>🛣️ PISTAS / COMPRIMENTO</b><div class="rd-airport-route-v31">${run}</div></div><div class="rd-airport-box-v31"><b>📍 IDENTIFICAÇÃO</b><div class="rd-airport-route-v31">${esc(a.name)}<br>ICAO: <b>${esc(a.icao)}</b><br>Coordenadas: ${Number(a.lat).toFixed(3)}, ${Number(a.lon).toFixed(3)}</div></div><div class="rd-airport-box-v31 rd-airport-wide-v31"><b>🌦️ METAR / TAF</b><div id="rdAirportWeatherV31-${esc(code)}" class="rd-airport-weather-v31"><div class="rd-airport-loading-v31">Carregando meteorologia...</div></div></div></div></div>`;}
+  window.loadAirportPanelWeatherV31=async function(code){const a=airportInfoV31(code),el=document.getElementById('rdAirportWeatherV31-'+code);if(!el||!a.icao)return;try{const r=await fetch('/api/weather/'+encodeURIComponent(a.icao),{cache:'no-store'}),d=await r.json();if(!r.ok)throw new Error(d.error||'HTTP '+r.status);const m=d.metar?.[0],t=d.taf?.[0];el.innerHTML=`<div><b>METAR:</b> ${m?esc(m.rawOb||m.raw_text||((m.fltCat||'—')+' • vento '+(m.wdir??'—')+'° / '+(m.wspd??'—')+' kt • vis '+(m.visib??'—'))):'Sem METAR disponível'}</div><div style="margin-top:6px"><b>TAF:</b> ${t?esc(t.rawTAF||t.raw_text||'Disponível'):'Sem TAF disponível'}</div>`;}catch(e){el.innerHTML='<div>⚠️ Meteorologia indisponível no momento.</div><div class="raw">'+esc(e.message)+'</div>';}};
+  function patchAirportMarkersV31(){if(typeof rdLiveAirportLayerV30==='undefined'||!rdLiveAirportLayerV30)return;rdLiveAirportLayerV30.eachLayer(m=>{if(m.__rdAirportPanelV31)return;const ll=m.getLatLng();let code=null;if(typeof RD_MAP_AIRPORTS_V21!=='undefined'){for(const [k,d] of Object.entries(RD_MAP_AIRPORTS_V21)){if(Math.abs(d[1]-ll.lat)<0.0001&&Math.abs(d[2]-ll.lng)<0.0001){code=k;break;}}}if(!code)return;m.__rdAirportPanelV31=true;m.bindPopup(airportPopupHtmlV31(code),{maxWidth:540,minWidth:420,autoPan:true});m.on('popupopen',()=>loadAirportPanelWeatherV31(code));});}
+  const oldRender=window.renderLiveRadarV29;if(typeof oldRender==='function'){window.renderLiveRadarV29=function(){const r=oldRender.apply(this,arguments);setTimeout(patchAirportMarkersV31,0);return r;};}
+  document.addEventListener('DOMContentLoaded',()=>{setTimeout(patchAirportMarkersV31,800);setInterval(patchAirportMarkersV31,3000);});
+})();
+</script>
+<script id="rd-routes-all-v31">
+(function(){
+  function allRoutesV31(){
+    const out=[], seen=new Set();
+    function add(f, airline, origin,dest,model,type){
+      f=String(f||'').trim(); origin=String(origin||'').trim().toUpperCase(); dest=String(dest||'').trim().toUpperCase();
+      if(!origin||!dest)return; if(!f) f=(airline==='RDP'?'RDP':'RD')+'3'+String(out.length+1).padStart(3,'0');
+      if(seen.has(f)) return; seen.add(f);
+      out.push([f,origin,dest,'06:00','12:00',model||'A359',airline|| (f.startsWith('RDP')?'RDP':'RD'),type||'Comercial']);
+    }
+    (Array.isArray(window.RD_MAP_V21)?window.RD_MAP_V21:[]).forEach(r=>add(r.flight,r.airline,r.origin,r.dest,r.model||r.aircraft,r.type));
+    (Array.isArray(window.rdFlightRoutes)?window.rdFlightRoutes:[]).forEach(r=>add(r.flight,r.airline,r.origin,r.dest,r.model||r.aircraft,r.type));
+    (Array.isArray(window.rdRoutesBR)?window.rdRoutesBR:[]).forEach(r=>add('', 'RD',r[0],r[1],r[4]||'A359','Comercial'));
+    (Array.isArray(window.rdRoutesPT)?window.rdRoutesPT:[]).forEach(r=>add('', 'RDP',r[0],r[1],r[4]||'A20N','Comercial'));
+    (Array.isArray(window.RD_REGIONAL_ROUTES_PT_V30)?window.RD_REGIONAL_ROUTES_PT_V30:[]).forEach(r=>add('', 'RDP',r[0],r[1],r[4]||'AT72','Regional'));
+    (Array.isArray(window.RD_SIMBRIEF_FLIGHTS)?window.RD_SIMBRIEF_FLIGHTS:[]).forEach(r=>add(r[0],r[0]&&String(r[0]).startsWith('RDP')?'RDP':'RD',r[1],r[2],r[5],'Comercial'));
+    return out;
+  }
+  function rebuildV31(){
+    const all=allRoutesV31();
+    // Faz todas as rotas ficarem disponíveis no seletor de aeronave/tripulação.
+    if(typeof window.getAllAvailableRoutesV30==='function'){
+      const base=window.getAllAvailableRoutesV30;
+      window.getAllAvailableRoutesV30=function(){
+        const existing=base(); const map=new Map(existing.map(x=>[x.flight,x]));
+        all.forEach(x=>{if(!map.has(x[0])) map.set(x[0],{flight:x[0],airline:x[6],origin:x[1],dest:x[2],model:x[5],type:x[7],status:'Programada',pilot:'IA',dep:x[3],arr:x[4]});});
+        return Array.from(map.values());
+      };
+    }
+    if(typeof window.refreshRouteSelectV30==='function') window.refreshRouteSelectV30(document.getElementById('v30Fleet100Route')?.value||'');
+
+    // A aba SimBrief passa a listar TODAS as rotas, inclusive regionais de Portugal.
+    if(Array.isArray(window.RD_SIMBRIEF_FLIGHTS)){
+      const arr=all.map(x=>[x[0],x[1],x[2],x[3],x[4],x[5]]);
+      window.RD_SIMBRIEF_FLIGHTS.splice(0,window.RD_SIMBRIEF_FLIGHTS.length,...arr);
+    }
+    if(typeof window.initSimBrief==='function') window.initSimBrief();
+    const sel=document.getElementById('simbriefFlightSelect'); if(sel && sel.options.length) sel.selectedIndex=0;
+    if(typeof window.renderSimBriefSelection==='function') window.renderSimBriefSelection();
+  }
+  // SimBrief deve localizar também as rotas regionais/novas que não estavam no RD_MAP original.
+  const oldOpen=window.openSimBriefForRDFlight;
+  window.openSimBriefForRDFlight=function(flight){
+    const all=allRoutesV31();
+    const x=all.find(r=>String(r[0])===String(flight));
+    if(x){
+      const type=(typeof rdSimBriefAircraftCode==='function')?rdSimBriefAircraftCode(x[5]||'A359'):(x[5]||'A359');
+      const orig=(typeof rdSimBriefICAO==='function')?rdSimBriefICAO(x[1]):x[1];
+      const dest=(typeof rdSimBriefICAO==='function')?rdSimBriefICAO(x[2]):x[2];
+      const fltnum=String(x[0]).replace(/^RDP?/,'').replace(/^RD/,'')||String(x[0]);
+      const qs=new URLSearchParams({airline:'RD',fltnum,type,orig,dest,navlog:'1',stepclimbs:'1',notams:'1',maps:'detail'});
+      const url='https://dispatch.simbrief.com/options/custom?'+qs.toString();
+      try{localStorage.setItem('rdLastSimBriefDispatch',JSON.stringify({flight:x[0],orig,dest,type,at:new Date().toISOString(),url}));}catch(e){}
+      window.open(url,'_blank','noopener');
+      const out=document.getElementById('simbriefCopyStatus'); if(out)out.textContent=`✓ SimBrief preparado: ${orig} → ${dest}.`;
+      return url;
+    }
+    return typeof oldOpen==='function'?oldOpen.apply(this,arguments):null;
+  };
+  document.addEventListener('DOMContentLoaded',()=>setTimeout(rebuildV31,500));
+  window.addEventListener('load',()=>setTimeout(rebuildV31,700));
 })();
 </script>
 
