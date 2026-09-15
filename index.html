@@ -2425,9 +2425,29 @@ window.addEventListener('load',()=>{
         status:r.status||'Programada', pilot:r.pilot||'IA', dep:r[3]||r.dep||'', arr:r[4]||r.arr||''
       });
     };
-    (Array.isArray(window.RD_MAP_V21)?window.RD_MAP_V21:[]).forEach(add);
-    (Array.isArray(window.rdFlightRoutes)?window.rdFlightRoutes:[]).forEach(add);
-    (Array.isArray(window.RD_SIMBRIEF_FLIGHTS)?window.RD_SIMBRIEF_FLIGHTS:[]).forEach(add);
+    // IMPORTANTE: RD_MAP_V21/rdFlightRoutes/RD_SIMBRIEF_FLIGHTS são const/let do script,
+    // portanto podem não existir como propriedades de window em produção (Render).
+    // Lemos diretamente as variáveis quando disponíveis e preservamos o mapa/ADS-B.
+    const mapRoutes = (typeof RD_MAP_V21 !== 'undefined' && Array.isArray(RD_MAP_V21)) ? RD_MAP_V21 : [];
+    const flightRoutes = (typeof rdFlightRoutes !== 'undefined' && Array.isArray(rdFlightRoutes)) ? rdFlightRoutes : [];
+    const simbriefRoutes = (typeof RD_SIMBRIEF_FLIGHTS !== 'undefined' && Array.isArray(RD_SIMBRIEF_FLIGHTS)) ? RD_SIMBRIEF_FLIGHTS : [];
+    const brRoutes = (typeof rdRoutesBR !== 'undefined' && Array.isArray(rdRoutesBR)) ? rdRoutesBR : [];
+    const ptRoutes = (typeof rdRoutesPT !== 'undefined' && Array.isArray(rdRoutesPT)) ? rdRoutesPT : [];
+    const regionalPT = (typeof RD_REGIONAL_ROUTES_PT_V30 !== 'undefined' && Array.isArray(RD_REGIONAL_ROUTES_PT_V30)) ? RD_REGIONAL_ROUTES_PT_V30 : [];
+    mapRoutes.forEach(add);
+    flightRoutes.forEach(add);
+    simbriefRoutes.forEach(add);
+    const addTableRoute = (r, prefix) => {
+      if(!Array.isArray(r)) return;
+      const origin=String(r[0]??'').trim().toUpperCase();
+      const dest=String(r[1]??'').trim().toUpperCase();
+      if(!origin||!dest) return;
+      const flight = String(r[5]||r[6]||`${prefix}-${origin}-${dest}`).trim();
+      add({flight, airline: prefix==='RDP'?'RDP':'RD', origin, dest, model:r[5] && String(r[5]).match(/A\d|B\d|E19|E75|CRJ|ATR|DH8/i)?r[5]:'', type:'Comercial', status:'Programada', dep:r[6]||''});
+    };
+    brRoutes.forEach(r=>addTableRoute(r,'RD'));
+    ptRoutes.forEach(r=>addTableRoute(r,'RDP'));
+    regionalPT.forEach(r=>addTableRoute(r,'RDP'));
     return out;
   }
   window.getAllAvailableRoutesV30=routePoolV30;
